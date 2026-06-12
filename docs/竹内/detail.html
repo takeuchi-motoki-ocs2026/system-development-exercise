@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1.0">
+
+  <title>商品詳細</title>
+
+  <link rel="stylesheet"
+    href="css/style.css">
+</head>
+<body>
+
+<div class="container">
+
+  <!-- ヘッダー -->
+  <header>
+    <div class="time">
+      残り時間 60分
+    </div>
+  </header>
+
+  <!-- タブ -->
+  <nav class="tabs">
+
+    <button class="tab active"
+      onclick="location.href='orderHome.html?category=food'">
+      料理
+    </button>
+
+    <button class="tab"
+      onclick="location.href='orderHome.html?category=drink'">
+      ドリンク
+    </button>
+
+    <button class="tab"
+      onclick="location.href='orderHome.html?category=service'">
+      サービス
+    </button>
+
+    <button class="tab"
+      onclick="location.href='orderHome.html?category=limited'">
+      店舗限定
+    </button>
+
+  </nav>
+
+  <!-- 商品画像 -->
+  <img class="detail-image"
+    src="public/images/negima.jpg">
+
+  <!-- 商品情報 -->
+  <div class="detail-info">
+
+    <h2>ねぎま</h2>
+
+    <p>150円</p>
+
+  </div>
+
+  <!-- 味選択 -->
+  <div class="flavor">
+
+    <button id="tareBtn">
+      タレ
+    </button>
+
+    <button id="shioBtn">
+      塩
+    </button>
+
+  </div>
+
+  <!-- 数量 -->
+  <div class="counter">
+
+    <button id="minusBtn" disabled>
+      -
+    </button>
+
+    <span id="count">1</span>
+
+    <button id="plusBtn" disabled>
+      +
+    </button>
+
+  </div>
+
+  <!-- ボタン -->
+  <div class="actions">
+
+    <a href="orderHome.html">
+      <button class="back">
+        戻る
+      </button>
+    </a>
+
+    <button class="add"
+      id="orderBtn"
+      disabled>
+      カートに追加🛒
+    </button>
+
+  </div>
+
+  <!-- フッター -->
+  <footer>
+
+    <a href="cart.html">
+      <button>注文カゴ</button>
+    </a>
+
+    <a href="history.html">
+      <button>注文履歴</button>
+    </a>
+
+    <a href="call.html">
+      <button>店員呼出</button>
+    </a>
+
+    <a href="checkout.html">
+      <button>会計</button>
+    </a>
+
+  </footer>
+
+</div>
+
+<script src="js/detail.js"></script>
+
+</body>
+</html>

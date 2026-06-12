@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>注文履歴</title>
+
+<style>
+body {
+    margin: 0;
+    font-family: sans-serif;
+    background-color: #f4c99b;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.header,
+.footer {
+    height: 60px;
+    background-color: #e76f51;
+    flex-shrink: 0;
+}
+
+.container {
+    flex: 1;
+    padding: 10px;
+    background-color: #f4c99b;
+}
+
+h2 {
+    margin: 0;
+    font-size: 32px;
+    text-align: left;
+}
+
+.history-header {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    margin-bottom: 20px;
+}
+
+.seat-label {
+    font-size: 26px;
+    color: #5d4524;
+    margin-top: 8px;
+    text-align: right;
+    margin-right: 8px;
+}
+
+.history-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px;
+    margin-bottom: 15px;
+    background-color: #e5df9c;
+    border: 1px solid #c4b66d;
+    border-radius: 6px;
+    box-sizing: border-box;
+}
+
+.history-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.item-name {
+    margin: 0;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.item-price {
+    margin: 4px 0 0;
+    font-size: 16px;
+    color: #5d4524;
+}
+
+.item-count {
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background-color: #999999;
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+    flex-shrink: 0;
+}
+
+.back-btn {
+    margin-top: 20px;
+    width: 120px;
+    padding: 12px;
+    background-color: #35c3e6;
+    color: white;
+    border: 1px solid #666;
+    font-size: 20px;
+    cursor: pointer;
+}
+</style>
+</head>
+
+<body>
+
+<div class="header"></div>
+
+<div class="container">
+
+    <div class="history-header">
+        <h2>注文履歴</h2>
+        <div class="seat-label">1席</div>
+    </div>
+
+    <div class="history-item">
+        <div class="history-info">
+            <p class="item-name">ねぎま（塩）</p>
+            <p class="item-price">150円</p>
+        </div>
+        <div class="item-count">1</div>
+    </div>
+
+    <div class="history-item">
+        <div class="history-info">
+            <p class="item-name">生ビール</p>
+            <p class="item-price">550円</p>
+        </div>
+        <div class="item-count">2</div>
+    </div>
+
+    <div class="history-item">
+        <div class="history-info">
+            <p class="item-name">枝豆</p>
+            <p class="item-price">350円</p>
+        </div>
+        <div class="item-count">1</div>
+    </div>
+
+    <button class="back-btn" onclick="location.href='./home'">戻る</button>
+
+</div>
+
+<div class="footer"></div>
+
+</body>
+</html>

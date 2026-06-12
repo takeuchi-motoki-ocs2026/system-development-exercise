@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
+
+<title>注文状況</title>
+
+<style>
+
+body {
+    margin: 0;
+    font-family: sans-serif;
+    background-color: #e6b98a;
+
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* ヘッダー */
+.header {
+    height: 60px;
+    background-color: #e0663f;
+
+    flex-shrink: 0;
+}
+
+/* フッター */
+.footer {
+    height: 80px;
+    background-color: #e0663f;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.home-icon-btn {
+    width: 70px;
+    height: 70px;
+
+    border: none;
+    border-radius: 20px;
+
+    background-color: #d9d9d9;
+
+    font-size: 42px;
+    color: #444;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    box-shadow:
+        inset 0 2px 4px rgba(255,255,255,0.7),
+        0 2px 5px rgba(0,0,0,0.2);
+}
+
+/* メインコンテンツ */
+.container {
+    flex: 1;
+    padding: 10px;
+}
+
+/* タイトル */
+h2 {
+    margin: 15px 0;
+}
+
+/* メニューボタン */
+.menu-btn {
+
+    width: 100%;
+
+    box-sizing: border-box;
+
+    padding: 35px 20px;
+
+    margin-bottom: 10px;
+
+    background-color: #d8cc8c;
+
+    border: 1px solid #b8aa66;
+
+    text-align: center;
+
+    font-size: 20px;
+
+    cursor: pointer;
+
+    transition: 0.2s;
+}
+
+/* ホバー */
+.menu-btn:hover {
+    background-color: #cfc27f;
+}
+
+/* 押した時 */
+.menu-btn:active {
+    transform: scale(0.98);
+}
+
+/* 戻るボタン */
+.back-btn {
+
+    margin-top: 20px;
+
+    width: 120px;
+
+    padding: 12px;
+
+    background-color: #35c3e6;
+
+    color: white;
+
+    border: 1px solid #666;
+
+    font-size: 20px;
+
+    cursor: pointer;
+}
+
+/* ホバー */
+.footer-home-btn:hover {
+    background-color: #f2f2f2;
+}
+
+/* 押した時 */
+.footer-home-btn:active {
+    transform: scale(0.95);
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="header"></div>
+
+<div class="container">
+
+    <h2>注文状況</h2>
+
+    <div class="menu-btn"
+         onclick="location.href='{{ route('prototypeorder-status') }}'">
+
+        注文状況
+
+    </div>
+
+    <div class="menu-btn"
+         onclick="location.href='{{ route('prototypeorder-history') }}'">
+
+        注文履歴
+
+    </div>
+
+    <button class="back-btn"
+        onclick="location.href='{{ route('prototypehome') }}'">
+
+        戻る
+
+    </button>
+
+</div>
+
+<div class="footer">
+
+    <button class="home-icon-btn"
+        onclick="location.href='{{ route('prototypehome') }}'">
+
+        ⌂
+
+    </button>
+
+</div>
+
+</body>
+</html>
