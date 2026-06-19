@@ -127,15 +127,17 @@
       </button>
     </a>
 
+    <button type="button">注文<br>カゴ</button>
+
     <a href="{{ url('/prototype/history') }}">
       <button>
-        注文履歴
+        注文<br>履歴
       </button>
     </a>
 
     <a href="{{ url('/prototype/call') }}">
       <button>
-        店員呼出
+        店員<br>呼出
       </button>
     </a>
 

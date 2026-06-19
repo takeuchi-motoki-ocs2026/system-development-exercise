@@ -15,19 +15,19 @@
 
 <div class="container">
 
-  <header>
-    <div class="time">残り時間 60分</div>
-  </header>
+  <footer>
 
-  <nav class="tabs">
-    <button>料理</button>
-    <button>ドリンク</button>
-    <button>サービス</button>
-    <button>店舗限定</button>
-  </nav>
+    <a href="{{ url('/prototype/orderHome') }}"><button>注文</button></a>
 
-  <div class="confirm-area">
+    <a href="{{ url('/prototype/cart') }}"><button>注文<br>カゴ</button></a>
 
+    <a href="{{ url('/prototype/history') }}"><button>注文<br>履歴</button></a>
+
+    <a href="{{ url('/prototype/call') }}"><button>店員<br>呼出</button></a>
+
+    <a href="{{ url('/prototype/checkout') }}"><button>会計</button></a>
+
+  </footer>
     <h1>
       全て削除します<br>
       よろしいですか？
@@ -53,6 +53,10 @@
 
     <a href="{{ url('/prototype/orderHome') }}">
       <button>注文</button>
+    </a>
+
+    <a href="{{ url('/prototype/cart') }}">
+      <button>注文カゴ</button>
     </a>
 
     <a href="{{ url('/prototype/history') }}">
