@@ -91,19 +91,21 @@
 
     <a href="{{ url('/prototype/cart') }}">
       <button>
-        注文カゴ
+        注文<br>カゴ
       </button>
     </a>
 
+    <button type="button">注文<br>履歴</button>
+
     <a href="{{ url('/prototype/call') }}">
       <button>
-        店員呼出
+        店員<br>呼出
       </button>
 
     </a>
 
     <a href="{{ url('/prototype/checkout') }}">
-      <button>会計　　</button>
+      <button>会計</button>
     </a>
 
   </footer>

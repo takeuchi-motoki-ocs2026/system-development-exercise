@@ -31,9 +31,11 @@
 
     <a href="{{ url('/prototype/orderHome') }}"><button>注文</button></a>
 
-    <a href="{{ url('/prototype/cart') }}"><button>注文カゴ</button></a>
+    <a href="{{ url('/prototype/cart') }}"><button>注文<br>カゴ</button></a>
 
-    <a href="{{ url('/prototype/history') }}"><button>注文履歴</button></a>
+    <a href="{{ url('/prototype/history') }}"><button>注文<br>履歴</button></a>
+
+    <button type="button">店員<br>呼出</button>
 
     <a href="{{ url('/prototype/checkout') }}"><button>会計</button></a>
 

@@ -1,24 +1,28 @@
 <!DOCTYPE html>
 <html lang="ja">
-<head>
-  <meta charset="UTF-8">
+  <footer>
 
-  <meta name="viewport"
-    content="width=device-width, initial-scale=1.0">
+    <a href="{{ url('/prototype/orderHome') }}">
+      <button>注文</button>
+    </a>
 
-  <title>注文確認</title>
+    <a href="{{ url('/prototype/cart') }}">
+      <button>注文<br>カゴ</button>
+    </a>
 
-  <link rel="stylesheet"
-    href="{{ asset('css/style.css') }}">
-</head>
-<body>
+    <a href="{{ url('/prototype/history') }}">
+      <button>注文<br>履歴</button>
+    </a>
 
-<div class="container">
+    <a href="{{ url('/prototype/call') }}">
+      <button>店員<br>呼出</button>
+    </a>
 
-  <header>
-    <div class="time">残り時間 60分</div>
-  </header>
+    <a href="{{ url('/prototype/checkout') }}">
+      <button>会計</button>
+    </a>
 
+  </footer>
   <nav class="tabs">
     <button>料理</button>
     <button>ドリンク</button>
@@ -48,6 +52,10 @@
 
     <a href="{{ url('/prototype/orderHome') }}">
       <button>注文</button>
+    </a>
+
+    <a href="{{ url('/prototype/cart') }}">
+      <button>注文カゴ</button>
     </a>
 
     <a href="{{ url('/prototype/history') }}">

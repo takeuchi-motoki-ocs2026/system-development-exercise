@@ -9,6 +9,11 @@ body{
   overflow-x:hidden;
 }
 
+/* 常に縦スクロールバーを表示してページ間の幅ズレを防止 */
+html{
+  overflow-y:scroll;
+}
+
 .container{
   max-width:430px;
   margin:auto;
@@ -83,24 +88,73 @@ footer{
   transform:translateX(-50%);
   width:100%;
   max-width:430px;
-  display:flex;
+  display:grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap:6px;
   background:#e76f51;
-  min-height:80px;
+  min-height:92px;
+  align-items:stretch;
+  grid-auto-rows:1fr;
+  padding:10px;
+  box-sizing:border-box;
 }
 
-footer a{
-  flex:1;
+footer a {
+  display:block;
+  width:100%;
+}
+
+footer a,
+footer > button {
   display:flex;
+  justify-content:center;
+  align-items:center;
+  width:100%;
+  height:100%;
   text-decoration:none;
 }
 
-footer button{
-  flex:1;
-  margin:10px;
-  padding:15px 5px;
-  font-size:26px;
-  line-height:1.2;
+footer a button,
+footer > button {
+  width:100%;
+  height:100%;
+  margin:0;
+  padding:8px 6px 6px 6px;
+  font-size:18px;
+  line-height:1;
   border:none;
+  border-radius:12px;
+  box-sizing:border-box;
+  text-align:center;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:4px;
+  white-space:normal;
+  word-break:keep-all;
+  min-height:56px;
+}
+
+footer a button {
+  background:#ffffff;
+  color:#e76f51;
+  border:2px solid transparent;
+}
+
+footer a button:hover {
+  background:#f8f0dc;
+}
+
+footer > button {
+  background:#e76f51;
+  color:white;
+  border:2px solid white;
+  font-weight:700;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.2);
+}
+
+footer > button:hover {
+  background:#d65f3d;
 }
 
 .footer-none{
@@ -470,12 +524,20 @@ footer button{
    会計
 ========================= */
 
+.checkout-message{
+  text-align:center;
+  font-size:34px;
+  line-height:1.2;
+  max-width:320px;
+  margin:0 auto;
+}
+
 .checkout-total{
-  padding:20px 40px;
+  padding:18px 32px;
   background:#e76f51;
   color:white;
   border-radius:10px;
-  font-size:40px;
+  font-size:36px;
   font-weight:bold;
 }
 
