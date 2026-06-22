@@ -42,7 +42,7 @@
         </p>
 
         <p class="item-price">
-          １５０円
+          150円
         </p>
 
       </div>
@@ -63,7 +63,7 @@
         </p>
 
         <p class="item-price">
-          ５５０円
+          0円
         </p>
 
       </div>
@@ -77,7 +77,7 @@
   </div>
 
   <div class="total-area">
-    合計　1,250円
+    合計　150円
   </div>
 
   <!-- フッター -->
@@ -111,6 +111,10 @@
   </footer>
 
 </div>
+
+@include('prototype.partials.call-confirm')
+
+<script src="{{ asset('js/call-confirm.js') }}"></script>
 
 </body>
 </html>

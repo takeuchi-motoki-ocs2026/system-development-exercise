@@ -44,6 +44,11 @@
     window.location.href = '{{ url('/prototype/orderHome') }}';
   }, 1000);
 </script>
+</script>
+
+@include('prototype.partials.call-confirm')
+
+<script src="{{ asset('js/call-confirm.js') }}"></script>
 
 </body>
 </html>

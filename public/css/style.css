@@ -146,7 +146,7 @@ footer a button:hover {
 }
 
 footer > button {
-  background:#e76f51;
+  background: #FFA500; /* オレンジに変更 */
   color:white;
   border:2px solid white;
   font-weight:700;
@@ -154,7 +154,7 @@ footer > button {
 }
 
 footer > button:hover {
-  background:#d65f3d;
+  background: #e59400; /* ホバー時も濃いオレンジ */
 }
 
 .footer-none{
@@ -337,6 +337,12 @@ footer > button:hover {
   padding-bottom:100px;
 }
 
+.cart-page{
+  min-height:100vh;
+  padding-top:70px;
+  padding-bottom:100px;
+}
+
 .history-title{
   margin:5px 0 15px;
   text-align:center;
@@ -430,6 +436,18 @@ footer > button:hover {
   font-size:35px;
   font-weight:bold;
   border-radius:10px;
+  z-index:8;
+}
+
+/* 注文履歴ページの合計金額表示をフッターのちょい上に移動 */
+.history-page .total-area{
+  bottom:110px;
+  z-index:9;
+}
+
+/* 注文カゴページの合計金額表示は元の位置に保つ */
+.cart-page .total-area{
+  bottom:220px;
   z-index:8;
 }
 
@@ -552,4 +570,55 @@ footer > button:hover {
   align-items:center;
   text-align:center;
   font-size:35px;
+}
+
+/* =========================
+   店員呼出 確認モーダル
+========================= */
+.cc-overlay{
+  position:fixed;
+  inset:0;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  background:rgba(0,0,0,0.48);
+  z-index:9999;
+}
+.cc-modal{
+  width:320px;
+  max-width:92%;
+  background:#fff;
+  border-radius:18px;
+  padding:22px;
+  text-align:center;
+  box-shadow:0 12px 40px rgba(0,0,0,0.28);
+}
+.cc-title{
+  margin:0 0 18px;
+  font-weight:700;
+  color:#111;
+  font-size:18px;
+}
+.cc-actions{
+  display:flex;
+  gap:12px;
+  justify-content:center;
+}
+.cc-btn{
+  flex:1;
+  padding:10px 14px;
+  border-radius:26px;
+  font-weight:700;
+  cursor:pointer;
+  border:2px solid transparent;
+}
+.cc-cancel{
+  background:#fff;
+  color:#e74c3c;
+  border-color:#e74c3c;
+}
+.cc-ok{
+  background:#e74c3c;
+  color:#fff;
+  border-color:#e74c3c;
 }
