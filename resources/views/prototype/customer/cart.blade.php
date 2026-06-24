@@ -13,7 +13,7 @@
 </head>
 <body>
 
-<div class="container history-page">
+<div class="container cart-page">
 
   <!-- ヘッダー -->
   <header>
@@ -152,5 +152,9 @@
 </div>
 
 <script src="{{ asset('js/cart.js') }}" defer></script>
+
+@include('prototype.partials.call-confirm')
+
+<script src="{{ asset('js/call-confirm.js') }}"></script>
 </body>
 </html>
