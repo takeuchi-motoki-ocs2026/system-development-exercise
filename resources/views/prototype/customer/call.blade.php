@@ -5,14 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>店員呼出</title>
   <link rel="stylesheet" href="{{ asset('css/style.css') }}">
-  <style>
-    .call-area {
-      margin-top: -30px;
-    }
-    .call-message {
-      font-size: 35px;
-    }
-  </style>
 </head>
 <body>
 

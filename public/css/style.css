@@ -319,11 +319,12 @@ footer > button:hover {
   justify-content:center;
   align-items:center;
   gap:45px;
+  margin-top:-30px;
 }
 
 .call-message{
   text-align:center;
-  font-size:40px;
+  font-size:35px;
 }
 
 .call-back-btn{
@@ -589,7 +590,7 @@ footer > button:hover {
   justify-content:center;
   align-items:center;
   text-align:center;
-  font-size:35px;
+  font-size:30px;
   font-weight:bold;
 }
 
