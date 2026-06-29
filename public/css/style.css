@@ -22,6 +22,13 @@ html{
   padding-bottom:220px;
 }
 
+.checkout-page .container{
+  padding-top:90px;
+}
+
+.checkout-page .call-area{
+  height:68vh;
+}
 
 /* =========================
    ヘッダー
@@ -311,7 +318,7 @@ footer > button:hover {
   flex-direction:column;
   justify-content:center;
   align-items:center;
-  gap:100px;
+  gap:45px;
 }
 
 .call-message{
@@ -548,15 +555,28 @@ footer > button:hover {
   line-height:1.2;
   max-width:320px;
   margin:0 auto;
+  font-weight:bold;
 }
 
 .checkout-total{
-  padding:18px 32px;
+  padding:12px 24px;
   background:#e76f51;
   color:white;
   border-radius:10px;
-  font-size:36px;
+  font-size:34px;
   font-weight:bold;
+}
+
+.confirm-buttons{
+  display:flex;
+  gap:44px;
+}
+
+.confirm-buttons button{
+  width:125px;
+  height:58px;
+  border-radius:30px;
+  font-size:24px;
 }
 
 /* =========================
@@ -570,6 +590,7 @@ footer > button:hover {
   align-items:center;
   text-align:center;
   font-size:35px;
+  font-weight:bold;
 }
 
 /* =========================
