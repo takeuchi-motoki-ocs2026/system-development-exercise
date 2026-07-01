@@ -1,20 +1,20 @@
 document.addEventListener('DOMContentLoaded', () => {
   const menus = {
     food: [
-      { name: 'ねぎま', price: '150円', image: '/images/negima.jpg' },
-      { name: 'もも', price: '150円', image: '/images/momo.jpg' },
-      { name: 'せせり', price: '150円', image: '/images/seseri.jpg', soldOut: true },
+      { key: 'negima', name: 'ねぎま', price: '150円', image: '/images/negima.jpg' },
+      { key: 'momo', name: 'もも', price: '150円', image: '/images/momo.jpg' },
+      { key: 'seseri', name: 'せせり', price: '150円', image: '/images/seseri.jpg', soldOut: true },
     ],
     drink: [
-      { name: '生ビール', price: '500円', image: '/images/beer.jpg' },
-      { name: 'ハイボール', price: '450円', image: '/images/highball.jpg' },
+      { key: 'beer', name: '生ビール', price: '500円', image: '/images/beer.jpg' },
+      { key: 'highball', name: 'ハイボール', price: '450円', image: '/images/highball.jpg' },
     ],
     service: [
-      { name: 'おしぼり', price: '無料', image: '/images/towel.jpg' },
-      { name: '取り皿', price: '無料', image: '/images/plate.jpg' },
+      { key: 'towel', name: 'おしぼり', price: '無料', image: '/images/towel.jpg' },
+      { key: 'plate', name: '取り皿', price: '無料', image: '/images/plate.jpg' },
     ],
     limited: [
-      { name: '限定串', price: '300円', image: '/images/limited.jpg' },
+      { key: 'limited', name: '限定串', price: '300円', image: '/images/limited.jpg' },
     ],
   };
 
@@ -33,7 +33,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const wrapperTag = item.soldOut ? 'div' : 'a';
       const wrapperAttrs = item.soldOut
         ? 'class="item sold-out"'
-        : `href="${detailUrl}" class="item"`;
+        : `href="${detailUrl}?item=${item.key}" class="item"`;
       const soldOutLabel = item.soldOut
         ? '<span class="sold-out-label">品切れ</span>'
         : '';
