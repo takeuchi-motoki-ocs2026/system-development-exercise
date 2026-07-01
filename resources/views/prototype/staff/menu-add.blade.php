@@ -339,59 +339,61 @@ input[type="number"]::-webkit-inner-spin-button {
 
 <div class="container">
 
-    <h2>メニュー追加</h2>
+    
+    <form action="/menu/add" method="POST" enctype="multipart/form-data">
+        @csrf
 
-    <div class="image-box"
-        onclick="document.getElementById('imageInput').click()">
 
-        <img id="preview" style="display:none;">
+        <h2>メニュー追加</h2>
 
-        <span id="imageText">写真の追加</span>
+        <div class="image-box"
+            onclick="document.getElementById('imageInput').click()">
 
-    </div>
+            <img id="preview" style="display:none;">
 
-    <input type="file"
-        id="imageInput"
-        accept="image/*"
-        style="display:none"
-        onchange="previewImage(event)">
+            <span id="imageText">写真の追加</span>
 
-    <div class="input-box">
+        </div>
 
-        <span>商品名：</span>
+        <input type="file"
+            id="imageInput"
+            accept="image/*"
+            style="display:none"
+            onchange="previewImage(event)">
 
-        <input type="text" id="menuName">
+        <div class="input-box">
 
-    </div>
+            <span>商品名：</span>
 
-    <div class="input-box">
+            <input type="text" name="name">
 
-        <span>値段：</span>
+        </div>
 
-        <input type="number" id="menuPrice">
+        <div class="input-box">
 
-    </div>
+            <span>値段：</span>
 
-    <div class="button-area">
+            <input type="number" name="price">
 
-        <button class="back-btn"
-            onclick="location.href='{{ route('prototypemenu-management') }}'">
+        </div>
 
-            戻る
+        <div class="button-area">
 
-        </button>
+            <button class="back-btn"
+                onclick="location.href='{{ route('prototypemenu-management') }}'">
 
-        <button class="add-btn"
-            id="addBtn"
-            onclick="openModal()"
-            disabled>
+                戻る
 
-            追加
+            </button>
 
-        </button>
+            <button class="add-btn" type="submit">
 
-    </div>
+                追加
 
+            </button>
+
+        </div>
+    </form>
 </div>
 
 <div class="footer">
