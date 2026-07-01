@@ -58,25 +58,15 @@ Route::view('/prototype/menu-edit', 'prototype.staff.menu-edit')->name('prototyp
 
 Route::redirect('/prototype/staff/order', '/prototype/staff/order/home');
 
-Route::view('/prototype/staff/order/home', 'prototype.staff.order.orderHome')->name('prototype.staff.order.home');
-
 Route::view('/prototype/staff/order/add', 'prototype.staff.order.add')->name('prototype.staff.order.add');
 
-Route::view('/prototype/staff/order/cart', 'prototype.staff.order.cart')->name('prototype.staff.order.cart');
-
 Route::view('/prototype/staff/order/delete', 'prototype.staff.order.delete')->name('prototype.staff.order.delete');
-
-Route::view('/prototype/staff/order/confirm', 'prototype.staff.order.confirm')->name('prototype.staff.order.confirm');
 
 Route::view('/prototype/staff/order/complete', 'prototype.staff.order.complete')->name('prototype.staff.order.complete');
 
 Route::view('/prototype/staff/order/history', 'prototype.staff.order.history')->name('prototype.staff.order.history');
 
-Route::view('/prototype/staff/order/detail', 'prototype.staff.order.detail')->name('prototype.staff.order.detail');
-
 Route::view('/prototype/staff/order', 'prototype.staff.order')->name('prototype.staff.order');
-
-Route::view('/prototype/staff/staff-history', 'prototype.staff.staff_history')->name('prototype.staff.staff.history');
 
 Route::view('/prototype/staff/vacancy', 'prototype.staff.vacancy-management')->name('prototype.staff.vacancy');
 
@@ -96,4 +86,43 @@ Route::post('/prototype/staff/order/cart/clear', function (Request $request) {
     $request->session()->forget('cart');
     return redirect()->route('prototype.staff.order.cart', ['cleared' => 1]);
 })->name('prototype.staff.order.cart.clear');
+
+
+
+
+
+
+
+
+
+
+
+
+use App\Http\Controllers\ProductController;
+
+// 一覧表示
+Route::get('/prototype/staff/order/home', [ProductController::class, 'index'])
+    ->name('prototype.staff.order.home');
+
+// 追加処理
+Route::post('/menu/add', [ProductController::class, 'store']);
+
+// カート表示
+Route::get('/prototype/staff/order/cart', [ProductController::class, 'cart'])
+    ->name('prototype.staff.order.cart');
+
+// 注文カゴ追加
+Route::post('/cart/add/{id}', [ProductController::class, 'add']);
+
+Route::get('/prototype/staff/order/detail/{id}', [ProductController::class, 'detail']);
+
+Route::post('/cart/delete/{id}', [ProductController::class, 'delete']);
+
+Route::post('/cart/update/{id}', [ProductController::class, 'update']);
+
+Route::post('/prototype/staff/order/confirm', [ProductController::class, 'confirm'])
+    ->name('prototype.staff.order.confirm');
+
+Route::get('/prototype/staff/staff-history', [ProductController::class, 'history'])
+    ->name('prototype.staff.staff.history');
 

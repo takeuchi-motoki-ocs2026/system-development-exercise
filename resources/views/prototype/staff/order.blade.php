@@ -168,11 +168,9 @@ h2{
 
             <button class="history-btn"
                     id="historyBtn"
-                    disabled
-                    onclick="location.href='{{ route('prototype.staff.order.home') }}'">
-                    >
+                    disabled>
 
-                新規注文開始
+                注文
 
             </button>
 
@@ -201,6 +199,16 @@ document.getElementById("seatSelect")
         btn.disabled = true;
     }
 
+});
+
+document.getElementById("historyBtn")
+.addEventListener("click", function(){
+
+    const seat = document.getElementById("seatSelect").value;
+
+    if(seat !== ""){
+        window.location.href = `/prototype/staff/order/home?seat=${seat}`;
+    }
 });
 
 </script>

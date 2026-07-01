@@ -42,7 +42,7 @@
         </p>
 
         <p class="item-price">
-          150円
+          １５０円
         </p>
 
       </div>
@@ -63,7 +63,7 @@
         </p>
 
         <p class="item-price">
-          0円
+          ５５０円
         </p>
 
       </div>
@@ -77,7 +77,7 @@
   </div>
 
   <div class="total-area">
-    合計　150円
+    合計　1,250円
   </div>
 
   <!-- フッター -->
@@ -91,30 +91,24 @@
 
     <a href="{{ url('/prototype/cart') }}">
       <button>
-        注文<br>カゴ
+        注文カゴ
       </button>
     </a>
 
-    <button type="button">注文<br>履歴</button>
-
     <a href="{{ url('/prototype/call') }}">
       <button>
-        店員<br>呼出
+        店員呼出
       </button>
 
     </a>
 
     <a href="{{ url('/prototype/checkout') }}">
-      <button>会計</button>
+      <button>会計　　</button>
     </a>
 
   </footer>
 
 </div>
-
-@include('prototype.partials.call-confirm')
-
-<script src="{{ asset('js/call-confirm.js') }}"></script>
 
 </body>
 </html>

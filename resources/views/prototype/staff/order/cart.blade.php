@@ -6,7 +6,7 @@
   <meta name="viewport"
     content="width=device-width, initial-scale=1.0">
 
-  <title>注文履歴</title>
+  <title>注文カゴ</title>
 
   <link rel="stylesheet"
     href="{{ asset('css/style.css') }}">
@@ -28,7 +28,8 @@
   <!-- 注文一覧 -->
   <div class="history-list">
 
-    <!-- 商品 -->
+    @foreach ($cart as $id => $item)
+
     <div class="history-row">
 
       <div class="history-item">
@@ -36,81 +37,72 @@
         <div class="history-info">
 
           <p class="item-name">
-            ねぎま（塩）
+            {{ $item['name'] }}（{{ $item['taste'] }}）
           </p>
 
           <p class="item-price">
-            150円
+            {{ $item['price'] }}円
           </p>
 
         </div>
 
         <div class="item-count-control">
-          <button class="qty-btn minus-btn">−</button>
-          <div class="item-count">1</div>
-          <button class="qty-btn plus-btn">+</button>
+          <!-- − -->
+          <form action="/cart/update/{{ $id }}" method="POST">
+            @csrf
+            <input type="hidden" name="quantity" value="{{ max(1, $item['quantity'] - 1) }}">
+            <button type="submit" class="qty-btn" {{ $item['quantity'] <= 1 ? 'disabled' : '' }}>−</button>
+          </form>
+
+          <!-- 数量 -->
+          <div class="item-count">{{ $item['quantity'] }}</div>
+
+          <!-- ＋ -->
+          <form action="/cart/update/{{ $id }}" method="POST">
+            @csrf
+            <input type="hidden" name="quantity" value="{{ min(5, $item['quantity'] + 1) }}">
+            <button type="submit" class="qty-btn" {{ $item['quantity'] >= 5 ? 'disabled' : '' }}>＋</button>
+          </form>
+
         </div>
 
       </div>
 
-      <button class="delete-item-btn">
-        🗑
-      </button>
+      <form action="/cart/delete/{{ $id }}" method="POST">
+        @csrf
+        <button type="submit" class="delete-item-btn">🗑</button>
+      </form>
 
     </div>
 
-    <!-- 商品 -->
-    <div class="history-row">
-
-      <div class="history-item">
-
-        <div class="history-info">
-
-          <p class="item-name">
-            生ビール
-          </p>
-
-          <p class="item-price">
-            0円
-          </p>
-
-        </div>
-
-        <div class="item-count-control">
-          <button class="qty-btn minus-btn">−</button>
-          <div class="item-count">2</div>
-          <button class="qty-btn plus-btn">+</button>
-        </div>
-
-      </div>
-
-      <button class="delete-item-btn">
-        🗑
-      </button>
-
-    </div>
+    @endforeach
 
   </div>
 
   <!-- 合計 -->
+  @php
+  $total = 0;
+  foreach ($cart as $item) {
+      $total += $item['price'] * $item['quantity'];
+  }
+  @endphp
+
   <div class="total-area">
-    合計　150円
+    合計　{{ $total }}円
   </div>
 
   <!-- ボタン -->
   <div class="cart-buttons">
 
-    <a href="{{ route('prototype.staff.order.delete') }}">
-      <button class="delete-all-btn">
-        全て削除
-      </button>
-    </a>
+    <form action="{{ route('prototype.staff.order.cart.clear') }}" method="POST">
+      @csrf
+      <button type="submit" class="delete-all-btn">全て削除</button>
+    </form>
     
-    <a href="{{ route('prototype.staff.order.confirm') }}">
-      <button class="confirm-btn">
-        注文確定
-      </button>
-    </a>
+    <form action="{{ route('prototype.staff.order.confirm') }}" method="POST">
+      @csrf
+      <button type="submit" class="confirm-btn">注文確定</button>
+    </form>
 
   </div>
 
@@ -130,6 +122,5 @@
 
 </div>
 
-<script src="{{ asset('js/cart.js') }}" defer></script>
 </body>
 </html>

@@ -6,7 +6,7 @@
   <title>会計確認</title>
   <link rel="stylesheet" href="{{ asset('css/style.css') }}">
 </head>
-<body class="checkout-page">
+<body>
 
 <div class="container">
 
@@ -16,7 +16,7 @@
 
   <div class="call-area">
 
-    <div class="call-message checkout-message">
+    <div class="call-message">
       会計に進みます<br>
       よろしいですか？
     </div>
@@ -32,18 +32,12 @@
 
   <footer>
     <a href="{{ url('/prototype/orderHome') }}"><button>注文</button></a>
-    <a href="{{ url('/prototype/cart') }}"><button>注文<br>カゴ</button></a>
-    <a href="{{ url('/prototype/history') }}"><button>注文<br>履歴</button></a>
-    <a href="{{ url('/prototype/call') }}"><button>店員<br>呼出</button></a>
-    <button type="button">会計</button>
+    <a href="{{ url('/prototype/history') }}"><button>注文履歴</button></a>
+    <a href="{{ url('/prototype/call') }}"><button>店員呼出</button></a>
+    <a href="{{ url('/prototype/checkout') }}"><button>会計</button></a>
   </footer>
 
 </div>
-</div>
-
-@include('prototype.partials.call-confirm')
-
-<script src="{{ asset('js/call-confirm.js') }}"></script>
 
 </body>
 </html>
