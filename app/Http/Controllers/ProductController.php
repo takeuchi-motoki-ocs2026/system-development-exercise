@@ -117,11 +117,62 @@ class ProductController extends Controller
 
     public function history(Request $request)
     {
-        $seat = $request->query('seat'); // ←これが超重要
+        $seat = $request->query('seat');
 
         $orders = Order::where('seat', $seat)->get();
 
         return view('prototype.staff.staff_history', compact('orders', 'seat'));
+    }
+    
+    // --- メニュー編集一覧 ---
+    // 編集画面表示
+    public function edit($id)
+    {
+        $product = Product::findOrFail($id);
+
+        return view(
+            'prototype.staff.menu-edit',
+            compact('product')
+        );
+    }
+
+    // 更新処理
+    public function updateProduct(
+        Request $request,
+        $id
+    ){
+        $product = Product::findOrFail($id);
+
+        $product->update([
+            'name' => $request->name,
+            'price' => $request->price,
+        ]);
+
+        return redirect(
+            '/prototype/menu-edit-list'
+        );
+    }
+    
+    // 削除処理
+    public function destroy($id)
+    {
+        $product = Product::findOrFail($id);
+
+        $product->delete();
+
+        return redirect(
+            '/prototype/menu-edit-list'
+        );
+    }
+    
+    public function editList()
+    {
+        $products = Product::all();
+
+        return view(
+            'prototype.staff.menu-edit-list',
+            compact('products')
+        );
     }
 
 }

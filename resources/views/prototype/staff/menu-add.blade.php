@@ -365,7 +365,7 @@ input[type="number"]::-webkit-inner-spin-button {
 
             <span>商品名：</span>
 
-            <input type="text" name="name">
+            <input type="text" id="menuName" name="name">
 
         </div>
 
@@ -373,20 +373,20 @@ input[type="number"]::-webkit-inner-spin-button {
 
             <span>値段：</span>
 
-            <input type="number" name="price">
+            <input type="number" id="menuPrice" name="price">
 
         </div>
 
         <div class="button-area">
 
-            <button class="back-btn"
-                onclick="location.href='{{ route('prototypemenu-management') }}'">
+            <button class="back-btn" type="button"
+                onclick="window.location.href='{{ route('prototypemenu-management') }}'">
 
                 戻る
 
             </button>
 
-            <button class="add-btn" type="submit">
+            <button class="add-btn" id="addBtn" type="submit">
 
                 追加
 

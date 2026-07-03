@@ -343,92 +343,44 @@ h2 {
             </tr>
 
         </thead>
-
+        
         <tbody>
 
-            <tr>
+        @foreach($products as $product)
 
-                <td></td>
+        <tr>
 
-                <td>
+            <td>{{ $product->name }}</td>
 
-                    <button class="edit-btn"
-                        onclick="editMenu()">
+            <td>
+                <button
+                    type="button" class="edit-btn"
+                    onclick="location.href='/menu/edit/{{ $product->id }}'">
+                    編集
+                </button>
+            </td>
 
-                        編集
+            <td>
+                
+                <form
+                    action="/menu/delete/{{ $product->id }}" method="POST">
+                    @csrf
+                    @method('DELETE')
 
-                    </button>
 
-                </td>
-
-                <td>
-
-                    <button class="delete-btn"
-                        onclick="openDeleteModal(this)">
-
+                    <button
+                        type="button" class="delete-btn"
+                        onclick="openDeleteModal( this )">
                         削除
-
                     </button>
 
-                </td>
+                </form>
 
-            </tr>
+            </td>
 
-            <tr>
+        </tr>
 
-                <td></td>
-
-                <td>
-
-                    <button class="edit-btn"
-                        onclick="editMenu()">
-
-                        編集
-
-                    </button>
-
-                </td>
-
-                <td>
-
-                    <button class="delete-btn"
-                        onclick="openDeleteModal(this)">
-
-                        削除
-
-                    </button>
-
-                </td>
-
-            </tr>
-
-            <tr>
-
-                <td></td>
-
-                <td>
-
-                    <button class="edit-btn"
-                        onclick="editMenu()">
-
-                        編集
-
-                    </button>
-
-                </td>
-
-                <td>
-
-                    <button class="delete-btn"
-                        onclick="openDeleteModal(this)">
-
-                        削除
-
-                    </button>
-
-                </td>
-
-            </tr>
+        @endforeach
 
         </tbody>
 
@@ -483,7 +435,9 @@ h2 {
 
             </div>
 
-            <div class="modal-product">
+            <div
+                class="modal-product"
+                id="modalProduct">
 
                 商品名：
 
@@ -497,7 +451,9 @@ h2 {
 
             <!-- ===== キャンセル ===== -->
 
-            <button class="cancel-btn"
+            <button
+                type="button"
+                class="cancel-btn"
                 onclick="closeDeleteModal()">
 
                 キャンセル
@@ -506,7 +462,9 @@ h2 {
 
             <!-- ===== 削除 ===== -->
 
-            <button class="ok-btn"
+            <button
+                type="button"
+                class="ok-btn"
                 onclick="completeDelete()">
 
                 削除
@@ -535,16 +493,22 @@ function editMenu() {
 
 /* ===== モーダル表示 ===== */
 
-function openDeleteModal(button) {
-
+function openDeleteModal(button)
+{
     deleteTarget = button;
+
+    const productName =
+        button.closest("tr")
+              .querySelector("td")
+              .textContent;
+
+    document.getElementById("modalProduct").textContent =
+        "商品名：" + productName;
 
     document.getElementById("deleteModal").style.display =
         "flex";
 
-    document.body.classList.add(
-        "modal-open"
-    );
+    document.body.classList.add("modal-open");
 }
 
 /* ===== モーダル閉じる ===== */
@@ -561,16 +525,12 @@ function closeDeleteModal() {
 
 /* ===== 削除実行 ===== */
 
-function completeDelete() {
-
-    if(deleteTarget) {
-
-        deleteTarget.closest("tr").remove();
+function completeDelete()
+{
+    if (deleteTarget)
+    {
+        deleteTarget.closest("form").submit();
     }
-
-    alert("削除しました");
-
-    closeDeleteModal();
 }
 
 </script>
