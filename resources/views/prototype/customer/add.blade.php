@@ -43,5 +43,9 @@
   }, 1000);
 </script>
 
+@include('prototype.partials.call-confirm')
+
+<script src="{{ asset('js/call-confirm.js') }}"></script>
+
 </body>
 </html>

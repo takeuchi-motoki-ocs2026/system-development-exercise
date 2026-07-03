@@ -246,6 +246,13 @@ footer button{
   font-size:25px;
 }
 
+.add:disabled{
+  background:#cccccc;
+  color:#7a7a7a;
+  cursor:default;
+  opacity:0.6;
+}
+
 
 /* =========================
    店員呼出
