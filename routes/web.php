@@ -52,8 +52,6 @@ Route::view('/prototype/stock-status', 'prototype.staff.stock-status')->name('pr
 
 Route::view('/prototype/menu-add', 'prototype.staff.menu-add')->name('prototypemenu-add');
 
-Route::view('/prototype/menu-edit-list', 'prototype.staff.menu-edit-list')->name('prototypemenu-edit-list');
-
 Route::view('/prototype/menu-edit', 'prototype.staff.menu-edit')->name('prototypemenu-edit');
 
 Route::redirect('/prototype/staff/order', '/prototype/staff/order/home');
@@ -123,6 +121,18 @@ Route::post('/cart/update/{id}', [ProductController::class, 'update']);
 Route::post('/prototype/staff/order/confirm', [ProductController::class, 'confirm'])
     ->name('prototype.staff.order.confirm');
 
+// --- メニュー編集一覧 ---
+// 編集画面
 Route::get('/prototype/staff/staff-history', [ProductController::class, 'history'])
     ->name('prototype.staff.staff.history');
 
+// 更新処理
+Route::get('/menu/edit/{id}', [ProductController::class, 'edit']);
+
+// 削除処理
+Route::delete('/menu/delete/{id}', [ProductController::class, 'destroy']);
+
+Route::get('/prototype/menu-edit-list', [ProductController::class, 'editList'])
+    ->name('prototypemenu-edit-list');
+
+Route::post('/menu/update/{id}', [ProductController::class, 'updateProduct']);
