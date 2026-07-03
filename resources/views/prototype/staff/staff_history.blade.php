@@ -12,7 +12,7 @@ body {
     background-color: #f4c99b;
     display: flex;
     flex-direction: column;
-    min-height: 100vh;
+    height: 100vh;
 }
 
 .header,
@@ -48,8 +48,15 @@ body {
 
 .container {
     flex: 1;
+
+    display: flex;
+    flex-direction: column;
+
+    overflow: hidden;
+
+    min-height: 0;
+
     padding: 10px;
-    background-color: #f4c99b;
 }
 
 h2 {
@@ -60,17 +67,23 @@ h2 {
 
 .history-header {
     display: flex;
-    flex-direction: column;
-    align-items: stretch;
+    justify-content: space-between;
+    align-items: center;
     margin-bottom: 20px;
 }
 
 .seat-label {
     font-size: 26px;
     color: #5d4524;
-    margin-top: 8px;
-    text-align: right;
-    margin-right: 8px;
+}
+
+.history-list {
+    flex: 1;
+    overflow-y: auto;
+    min-height: 0;
+    padding-bottom: 70px;
+
+    scrollbar-width: none;
 }
 
 .history-item {
@@ -116,7 +129,17 @@ h2 {
     flex-shrink: 0;
 }
 
+.button-area {
+    height: 70px;
+    flex-shrink: 0;
+}
+
 .back-btn {
+
+    position: fixed;
+    bottom: 90px;
+    left: 10px;
+
     margin-top: 20px;
     width: 120px;
     padding: 12px;
@@ -137,34 +160,45 @@ h2 {
 
     <div class="history-header">
         <h2>注文履歴</h2>
-        <div class="seat-label">1席</div>
+        <div class="seat-label">{{ $seat }}席</div>
     </div>
+
+    <div class="history-list">
+
+    @foreach($orders as $order)
 
     <div class="history-item">
+
         <div class="history-info">
-            <p class="item-name">ねぎま（塩）</p>
-            <p class="item-price">150円</p>
+
+            <p class="item-name">
+                {{ $order->name }}（{{ $order->taste ?? '' }}）
+            </p>
+
+            <p class="item-price">
+                {{ $order->price }}円
+            </p>
+
         </div>
-        <div class="item-count">1</div>
+
+        <div class="item-count">
+            {{ $order->quantity }}
+        </div>
+
     </div>
 
-    <div class="history-item">
-        <div class="history-info">
-            <p class="item-name">生ビール</p>
-            <p class="item-price">550円</p>
-        </div>
-        <div class="item-count">2</div>
+    @endforeach
+
     </div>
 
-    <div class="history-item">
-        <div class="history-info">
-            <p class="item-name">枝豆</p>
-            <p class="item-price">350円</p>
-        </div>
-        <div class="item-count">1</div>
-    </div>
+    <div class="button-area">
+        <button class="back-btn"
+            onclick="location.href='{{ route('prototypeorder-history') }}'">
 
-    <button class="back-btn" onclick="location.href='/prototype/order-history'">戻る</button>
+            戻る
+
+        </button>
+    </div>
 
 </div>
 

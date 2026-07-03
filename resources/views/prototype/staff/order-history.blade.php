@@ -191,9 +191,7 @@ h2{
 
             <button class="history-btn"
                     id="historyBtn"
-                    disabled
-                    onclick="location.href='{{ route('prototype.staff.staff.history') }}'"
-                    >
+                    disabled>
 
                 履歴
 
@@ -233,6 +231,17 @@ document.getElementById("seatSelect")
         btn.disabled = true;
     }
 
+});
+
+document.getElementById("historyBtn")
+.addEventListener("click", function(){
+
+    const seat = document.getElementById("seatSelect").value;
+
+    if(seat !== ""){
+        window.location.href =
+        `/prototype/staff/staff-history?seat=${seat}`;
+    }
 });
 
 </script>

@@ -4,12 +4,124 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Product;
+use App\Models\Order;
 
 class ProductController extends Controller
 {
+    // 一覧表示（orderHome用）
+    public function index(Request $request)
+    {
+        $products = Product::all();
+        $seat = $request->query('seat');
+
+        if ($seat !== null) {
+            session(['seat' => $seat]);
+        }
+
+        return view('prototype.staff.order.orderHome', compact('products', 'seat'));
+    }
+
+    // 登録処理（menu-add用）
+    public function store(Request $request)
+    {
+        Product::create([
+            'name' => $request->name,
+            'price' => $request->price,
+            'shop_id' => 1
+        ]);
+
+        return redirect('/prototype/staff/order/home');
+    }
+
+    public function add(Request $request, $id)
+    {
+        $product = Product::findOrFail($id);
+
+        $cart = session()->get('cart', []);
+
+        if (isset($cart[$id])) {
+            $cart[$id]['quantity'] += $request->quantity;
+        } else {
+            $cart[$id] = [
+                'name' => $product->name,
+                'price' => $product->price,
+                'quantity' => $request->quantity,
+                'taste' => $request->taste
+            ];
+        }
+
+        session()->put('cart', $cart);
+
+        return redirect('/prototype/staff/order/home')
+            ->with('success', 'カートに追加しました');
+
+    }
+
     public function detail($id)
     {
         $product = Product::findOrFail($id);
-        return view('prototype.detail', compact('product'));
+        return view('prototype.staff.order.detail', compact('product'));
     }
+
+    public function cart()
+    {
+        $cart = session()->get('cart', []);
+        return view('prototype.staff.order.cart', compact('cart'));
+    }
+
+    public function delete($id)
+    {
+        $cart = session()->get('cart', []);
+
+        if (isset($cart[$id])) {
+            unset($cart[$id]);
+        }
+
+        session()->put('cart', $cart);
+
+        return redirect('/prototype/staff/order/cart');
+    }
+
+    public function update(Request $request, $id)
+    {
+        $cart = session()->get('cart', []);
+
+        if (isset($cart[$id])) {
+            $cart[$id]['quantity'] = $request->quantity;
+        }
+
+        session()->put('cart', $cart);
+
+        return redirect('/prototype/staff/order/cart');
+    }
+
+    public function confirm()
+    {
+        $cart = session()->get('cart', []);
+
+        foreach ($cart as $item) {
+            Order::create([
+                'name' => $item['name'],
+                'price' => $item['price'],
+                'quantity' => $item['quantity'],
+                'taste' => $item['taste'],
+                'seat' => session('seat') ?? 1,
+            ]);
+        }
+
+        // カート空にする
+        session()->forget('cart');
+
+        return redirect('/prototype/staff/order/complete');
+    }
+
+    public function history(Request $request)
+    {
+        $seat = $request->query('seat'); // ←これが超重要
+
+        $orders = Order::where('seat', $seat)->get();
+
+        return view('prototype.staff.staff_history', compact('orders', 'seat'));
+    }
+
 }
