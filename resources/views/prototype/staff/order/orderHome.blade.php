@@ -4,11 +4,25 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>モバイルオーダー</title>
-  <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+  <link rel="stylesheet" href="{{ asset('css/staff_style.css') }}">
 </head>
 <body>
 
 <div class="container">
+
+  @if(session('success'))
+    <div id="msg" style="background: lightgreen; padding: 10px; text-align:center;">
+      {{ session('success') }}
+    </div>
+
+    <script>
+      // 2秒で消す
+      setTimeout(() => {
+        const msg = document.getElementById('msg');
+        if (msg) msg.style.display = 'none';
+      }, 2000);
+    </script>
+  @endif
 
   <header>
   </header>
@@ -33,7 +47,24 @@
     
   </nav>
 
-  <main id="menu-list"></main>
+  <main id="menu-list">
+
+      
+      @foreach ($products as $product)
+
+          <a href="/prototype/staff/order/detail/{{ $product->id }}" class="item">
+
+              <div class="item-text">
+                  <h2>{{ $product->name }}</h2>
+                  <p>{{ $product->price }}円</p>
+              </div>
+
+          </a>
+
+      @endforeach
+
+
+  </main>
 
   <footer>
     <a href="{{ url('/prototype/staff/order/cart') }}">
@@ -48,82 +79,7 @@
 
 </div>
 
-<script>
-  const menus = {
-    food: [
-      { name: 'ねぎま', price: '150円', image: '/images/negima.jpg' },
-      { name: 'もも', price: '150円', image: '/images/momo.jpg' },
-      { name: 'せせり', price: '150円', image: '/images/seseri.jpg' },
-    ],
-    drink: [
-      { name: '生ビール', price: '500円', image: '/images/beer.jpg' },
-      { name: 'ハイボール', price: '450円', image: '/images/highball.jpg' },
-    ],
-    service: [
-      { name: 'おしぼり', price: '無料', image: '/images/towel.jpg' },
-      { name: '取り皿', price: '無料', image: '/images/plate.jpg' },
-    ],
-    limited: [
-      { name: '限定串', price: '300円', image: '/images/limited.jpg' },
-    ],
-  };
 
-  function showMenu(category, event) {
-    const menuList = document.getElementById('menu-list');
-
-    if (!menuList || !menus[category]) {
-      return;
-    }
-
-    menuList.innerHTML = '';
-
-    menus[category].forEach((item) => {
-      menuList.innerHTML += `
-        <a href="{{ url('/prototype/staff/order/detail') }}" class="item">
-          <div class="item-text">
-            <h2>${item.name}</h2>
-            <p>${item.price}</p>
-          </div>
-          <img src="${item.image}" alt="">
-        </a>
-      `;
-    });
-
-    document.querySelectorAll('.tab').forEach((tab) => {
-      tab.classList.remove('active');
-    });
-
-    if (event && event.target) {
-      event.target.classList.add('active');
-    }
-  }
-
-  window.showMenu = showMenu;
-
-  window.addEventListener('DOMContentLoaded', () => {
-    const params = new URLSearchParams(window.location.search);
-    const category = params.get('category') || 'food';
-    const tabs = document.querySelectorAll('.tab');
-
-    let targetTab = tabs[0];
-
-    if (category === 'drink') {
-      targetTab = tabs[1];
-    }
-
-    if (category === 'service') {
-      targetTab = tabs[2];
-    }
-
-    if (category === 'limited') {
-      targetTab = tabs[3];
-    }
-
-    showMenu(category, {
-      target: targetTab,
-    });
-  });
-</script>
 
 </body>
 </html>

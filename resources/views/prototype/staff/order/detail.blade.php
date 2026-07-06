@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>商品詳細</title>
-  <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+  <link rel="stylesheet" href="{{ asset('css/staff_style.css') }}">
 </head>
 <body>
 
@@ -45,9 +45,8 @@
 
   <div class="flavor">
 
-    <button id="tareBtn">タレ</button>
-
-    <button id="shioBtn">塩</button>
+    <button type="button" id="tareBtn">タレ</button>
+    <button type="button" id="shioBtn">塩</button>
 
   </div>
 
@@ -61,34 +60,35 @@
 
   </div>
 
-  <div class="actions">
+  <form action="/cart/add/{{ $product->id }}" method="POST">
+    @csrf
 
-    <a href="{{ url('/prototype/staff/order/home') }}">
-      <button class="back">戻る</button>
-    </a>
+    <div class="actions">
 
-    <button class="add" id="orderBtn" disabled>カートに追加🛒</button>
+      <input type="hidden" name="taste" id="tasteInput">
+      <input type="hidden" name="quantity" id="quantityInput" value="1">
 
-  </div>
+      <a href="{{ url('/prototype/staff/order/home') }}">
+        <button type="button" class="back">戻る</button>
+      </a>
+
+      <button type="button" class="add" id="orderBtn">カートに追加🛒</button>
+
+    </div>
+
+  </form>
 
   <footer>
-
     <a href="{{ url('/prototype/staff/order/cart') }}">
-      <button>注文カゴ</button>
+      <button>
+        注文カゴ
+      </button>
     </a>
-
-    <a href="{{ url('/prototype/staff/order/history') }}">
-      <button>注文履歴</button>
+    <a href="{{ url('prototype/home') }}">
+      <button>
+        ホーム
+      </button>
     </a>
-
-    <a href="{{ url('/prototype/staff/order') }}">
-      <button>店員呼出</button>
-    </a>
-
-    <a href="{{ url('/prototype/staff/order/confirm') }}">
-      <button>会計</button>
-    </a>
-
   </footer>
 
 </div>
@@ -124,11 +124,11 @@
   });
 
   plusBtn.addEventListener('click', () => {
-    if (count < 4) {
+    if (count < 5) {
       count++;
       countText.textContent = count;
 
-      if (count >= 4) {
+      if (count >= 5) {
         plusBtn.disabled = true;
       }
 
@@ -154,17 +154,25 @@
   });
 
   orderBtn.addEventListener('click', () => {
+    if (!tareBtn.classList.contains('selected') && !shioBtn.classList.contains('selected')) {
+      alert('味を選択してください');
+      return;
+    }
+
     if (count > 0) {
-      window.location.href = '{{ url('/prototype/staff/order/add') }}';
+
+      const taste = tareBtn.classList.contains('selected') ? 'タレ' : '塩';
+
+      document.getElementById('tasteInput').value = taste;
+      document.getElementById('quantityInput').value = count;
+
+      document.querySelector('form').submit();
+
     } else {
       alert('数量を選択してください');
     }
   });
 </script>
-
-@include('prototype.partials.call-confirm')
-
-<script src="{{ asset('js/call-confirm.js') }}"></script>
 
 </body>
 </html>

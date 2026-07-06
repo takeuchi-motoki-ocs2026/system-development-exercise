@@ -83,7 +83,7 @@ h2 {
     </div>
 
     <div class="menu-btn" onclick="location.href='{{ route('prototype.staff.order') }}'">
-        注文
+        新規注文
     </div>
 
     <div class="menu-btn" onclick="location.href='{{ route('prototypemenu-management') }}'">

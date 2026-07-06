@@ -43,7 +43,6 @@
   setTimeout(() => {
     window.location.href = '{{ url('/prototype/orderHome') }}';
   }, 1000);
-</script>
 
 @include('prototype.partials.call-confirm')
 
