@@ -9,7 +9,7 @@
   <title>注文カゴ</title>
 
   <link rel="stylesheet"
-    href="{{ asset('css/style.css') }}">
+    href="{{ asset('css/staff_style.css') }}">
 </head>
 <body>
 
@@ -96,12 +96,16 @@
 
     <form action="{{ route('prototype.staff.order.cart.clear') }}" method="POST">
       @csrf
-      <button type="submit" class="delete-all-btn">全て削除</button>
+      <button type="submit" class="delete-all-btn" {{ empty($cart) ? 'disabled' : '' }}>
+        全て削除
+      </button>
     </form>
     
     <form action="{{ route('prototype.staff.order.confirm') }}" method="POST">
       @csrf
-      <button type="submit" class="confirm-btn">注文確定</button>
+      <button type="submit" class="confirm-btn" {{ empty($cart) ? 'disabled' : '' }}>
+        注文確定
+      </button>
     </form>
 
   </div>
