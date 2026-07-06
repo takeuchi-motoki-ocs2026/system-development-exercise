@@ -49,23 +49,23 @@
 
   </nav>
 
-  <img class="detail-image" src="{{ asset('images/negima.jpg') }}" alt="ねぎま">
+  <img class="detail-image" src="{{ asset($product['image']) }}" alt="{{ $product['alt'] }}">
 
   <div class="detail-info">
 
-    <h2>ねぎま</h2>
+    <h2>{{ $product['name'] }}</h2>
 
-    <p>150円</p>
-
-  </div>
-
-  <div class="flavor">
-
-    <button id="tareBtn">タレ</button>
-
-    <button id="shioBtn">塩</button>
+    <p>{{ $product['price'] }}</p>
 
   </div>
+
+  @if($product['hasFlavor'])
+    <div class="flavor">
+      @foreach($product['flavors'] as $index => $flavor)
+        <button class="flavor-btn" id="flavorBtn{{ $index }}">{{ $flavor }}</button>
+      @endforeach
+    </div>
+  @endif
 
   <div class="counter">
 
@@ -83,7 +83,7 @@
       <button class="back">戻る</button>
     </a>
 
-    <button class="add" id="orderBtn" disabled>カートに追加🛒</button>
+    <button class="add" id="orderBtn" disabled>注文カゴに追加🛒</button>
 
   </div>
 
@@ -119,9 +119,13 @@
   const countText = document.getElementById('count');
   const plusBtn = document.getElementById('plusBtn');
   const minusBtn = document.getElementById('minusBtn');
-  const tareBtn = document.getElementById('tareBtn');
-  const shioBtn = document.getElementById('shioBtn');
   const orderBtn = document.getElementById('orderBtn');
+  const hasFlavor = {{ $product['hasFlavor'] ? 'true' : 'false' }};
+  const flavorButtons = Array.from(document.querySelectorAll('.flavor-btn'));
+
+  function resetFlavorSelection() {
+    flavorButtons.forEach((button) => button.classList.remove('selected'));
+  }
 
   function enableCounter() {
     count = 1;
@@ -129,19 +133,22 @@
     plusBtn.disabled = false;
     minusBtn.disabled = true;
     orderBtn.disabled = false;
-    tareBtn.classList.remove('selected');
-    shioBtn.classList.remove('selected');
+    if (hasFlavor) {
+      resetFlavorSelection();
+    }
   }
 
-  tareBtn.addEventListener('click', () => {
+  if (hasFlavor) {
+    flavorButtons.forEach((button) => {
+      button.addEventListener('click', () => {
+        enableCounter();
+        resetFlavorSelection();
+        button.classList.add('selected');
+      });
+    });
+  } else {
     enableCounter();
-    tareBtn.classList.add('selected');
-  });
-
-  shioBtn.addEventListener('click', () => {
-    enableCounter();
-    shioBtn.classList.add('selected');
-  });
+  }
 
   plusBtn.addEventListener('click', () => {
     if (count < 4) {
