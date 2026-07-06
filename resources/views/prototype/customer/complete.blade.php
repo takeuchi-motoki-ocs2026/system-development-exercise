@@ -38,12 +38,16 @@
       <button>注文</button>
     </a>
 
+    <a href="{{ url('/prototype/cart') }}">
+      <button>注文<br>カゴ</button>
+    </a>
+
     <a href="{{ url('/prototype/history') }}">
-      <button>注文履歴</button>
+      <button>注文<br>履歴</button>
     </a>
 
     <a href="{{ url('/prototype/call') }}">
-      <button>店員呼出</button>
+      <button>店員<br>呼出</button>
     </a>
 
     <a href="{{ url('/prototype/checkout') }}">
@@ -54,14 +58,14 @@
 
 </div>
 
+@include('prototype.partials.call-confirm')
+
+<script src="{{ asset('js/call-confirm.js') }}"></script>
+
 <script>
-
-setTimeout(() => {
-
-  window.location.href = "{{ url('/prototype/orderHome') }}";
-
-}, 1000);
-
+  setTimeout(() => {
+    window.location.href = "{{ url('/prototype/orderHome') }}";
+  }, 1000);
 </script>
 
 </body>
