@@ -13,6 +13,7 @@
   $product = $products[$itemKey] ?? $products['negima'];
 @endphp
 
+
 <!DOCTYPE html>
 <html lang="ja">
 <head>
