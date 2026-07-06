@@ -1,18 +1,3 @@
-@php
-  $itemKey = request('item', 'negima');
-  $products = [
-    'negima' => ['name' => 'ねぎま', 'price' => '150円', 'image' => '/images/negima.jpg', 'alt' => 'ねぎま', 'hasFlavor' => true, 'flavors' => ['タレ', '塩', 'みそ']],
-    'momo' => ['name' => 'もも', 'price' => '150円', 'image' => '/images/momo.jpg', 'alt' => 'もも', 'hasFlavor' => true, 'flavors' => ['タレ', '塩',]],
-    'seseri' => ['name' => 'せせり', 'price' => '150円', 'image' => '/images/seseri.jpg', 'alt' => 'せせり', 'hasFlavor' => true, 'flavors' => ['タレ', '塩']],
-    'beer' => ['name' => '生ビール', 'price' => '500円', 'image' => '/images/beer.jpg', 'alt' => '生ビール', 'hasFlavor' => false, 'flavors' => []],
-    'highball' => ['name' => 'ハイボール', 'price' => '450円', 'image' => '/images/highball.jpg', 'alt' => 'ハイボール', 'hasFlavor' => false, 'flavors' => []],
-    'towel' => ['name' => 'おしぼり', 'price' => '無料', 'image' => '/images/towel.jpg', 'alt' => 'おしぼり', 'hasFlavor' => false, 'flavors' => []],
-    'plate' => ['name' => '取り皿', 'price' => '無料', 'image' => '/images/plate.jpg', 'alt' => '取り皿', 'hasFlavor' => false, 'flavors' => []],
-    'limited' => ['name' => '限定串', 'price' => '300円', 'image' => '/images/limited.jpg', 'alt' => '限定串', 'hasFlavor' => false, 'flavors' => []],
-  ];
-  $product = $products[$itemKey] ?? $products['negima'];
-@endphp
-
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -49,23 +34,23 @@
 
   </nav>
 
-  <img class="detail-image" src="{{ asset($product['image']) }}" alt="{{ $product['alt'] }}">
+  <img class="detail-image" src="{{ asset('images/negima.jpg') }}" alt="ねぎま">
 
   <div class="detail-info">
 
-    <h2>{{ $product['name'] }}</h2>
+    <h2>ねぎま</h2>
 
-    <p>{{ $product['price'] }}</p>
+    <p>150円</p>
 
   </div>
 
-  @if($product['hasFlavor'])
-    <div class="flavor">
-      @foreach($product['flavors'] as $index => $flavor)
-        <button class="flavor-btn" id="flavorBtn{{ $index }}">{{ $flavor }}</button>
-      @endforeach
-    </div>
-  @endif
+  <div class="flavor">
+
+    <button id="tareBtn">タレ</button>
+
+    <button id="shioBtn">塩</button>
+
+  </div>
 
   <div class="counter">
 
@@ -83,22 +68,26 @@
       <button class="back">戻る</button>
     </a>
 
-    <button class="add" id="orderBtn" disabled>注文カゴに追加🛒</button>
+    <button class="add" id="orderBtn" disabled>カートに追加🛒</button>
 
   </div>
 
   <footer>
 
+    <a href="{{ url('/prototype/orderHome') }}">
+      <button>注文</button>
+    </a>
+
     <a href="{{ url('/prototype/cart') }}">
-      <button>注文カゴ</button>
+      <button>注文<br>カゴ</button>
     </a>
 
     <a href="{{ url('/prototype/history') }}">
-      <button>注文履歴</button>
+      <button>注文<br>履歴</button>
     </a>
 
     <a href="{{ url('/prototype/call') }}">
-      <button>店員呼出</button>
+      <button>店員<br>呼出</button>
     </a>
 
     <a href="{{ url('/prototype/checkout') }}">
@@ -115,13 +104,9 @@
   const countText = document.getElementById('count');
   const plusBtn = document.getElementById('plusBtn');
   const minusBtn = document.getElementById('minusBtn');
+  const tareBtn = document.getElementById('tareBtn');
+  const shioBtn = document.getElementById('shioBtn');
   const orderBtn = document.getElementById('orderBtn');
-  const hasFlavor = {{ $product['hasFlavor'] ? 'true' : 'false' }};
-  const flavorButtons = Array.from(document.querySelectorAll('.flavor-btn'));
-
-  function resetFlavorSelection() {
-    flavorButtons.forEach((button) => button.classList.remove('selected'));
-  }
 
   function enableCounter() {
     count = 1;
@@ -129,22 +114,19 @@
     plusBtn.disabled = false;
     minusBtn.disabled = true;
     orderBtn.disabled = false;
-    if (hasFlavor) {
-      resetFlavorSelection();
-    }
+    tareBtn.classList.remove('selected');
+    shioBtn.classList.remove('selected');
   }
 
-  if (hasFlavor) {
-    flavorButtons.forEach((button) => {
-      button.addEventListener('click', () => {
-        enableCounter();
-        resetFlavorSelection();
-        button.classList.add('selected');
-      });
-    });
-  } else {
+  tareBtn.addEventListener('click', () => {
     enableCounter();
-  }
+    tareBtn.classList.add('selected');
+  });
+
+  shioBtn.addEventListener('click', () => {
+    enableCounter();
+    shioBtn.classList.add('selected');
+  });
 
   plusBtn.addEventListener('click', () => {
     if (count < 4) {
@@ -184,6 +166,10 @@
     }
   });
 </script>
+
+@include('prototype.partials.call-confirm')
+
+<script src="{{ asset('js/call-confirm.js') }}"></script>
 
 </body>
 </html>
