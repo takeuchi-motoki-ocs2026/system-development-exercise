@@ -1,3 +1,18 @@
+@php
+  $itemKey = request('item', 'negima');
+  $products = [
+    'negima' => ['name' => 'ねぎま', 'price' => '150円', 'image' => '/images/negima.jpg', 'alt' => 'ねぎま', 'hasFlavor' => true, 'flavors' => ['タレ', '塩', 'みそ']],
+    'momo' => ['name' => 'もも', 'price' => '150円', 'image' => '/images/momo.jpg', 'alt' => 'もも', 'hasFlavor' => true, 'flavors' => ['タレ', '塩',]],
+    'seseri' => ['name' => 'せせり', 'price' => '150円', 'image' => '/images/seseri.jpg', 'alt' => 'せせり', 'hasFlavor' => true, 'flavors' => ['タレ', '塩']],
+    'beer' => ['name' => '生ビール', 'price' => '500円', 'image' => '/images/beer.jpg', 'alt' => '生ビール', 'hasFlavor' => false, 'flavors' => []],
+    'highball' => ['name' => 'ハイボール', 'price' => '450円', 'image' => '/images/highball.jpg', 'alt' => 'ハイボール', 'hasFlavor' => false, 'flavors' => []],
+    'towel' => ['name' => 'おしぼり', 'price' => '無料', 'image' => '/images/towel.jpg', 'alt' => 'おしぼり', 'hasFlavor' => false, 'flavors' => []],
+    'plate' => ['name' => '取り皿', 'price' => '無料', 'image' => '/images/plate.jpg', 'alt' => '取り皿', 'hasFlavor' => false, 'flavors' => []],
+    'limited' => ['name' => '限定串', 'price' => '300円', 'image' => '/images/limited.jpg', 'alt' => '限定串', 'hasFlavor' => false, 'flavors' => []],
+  ];
+  $product = $products[$itemKey] ?? $products['negima'];
+@endphp
+
 <!DOCTYPE html>
 <html lang="ja">
 <head>
