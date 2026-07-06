@@ -9,7 +9,7 @@
   <title>注文完了</title>
 
   <link rel="stylesheet"
-    href="{{ asset('css/style.css') }}">
+    href="{{ asset('css/staff_style.css') }}">
 </head>
 <body>
 
