@@ -21,10 +21,6 @@
       店員呼出中です</strong>
     </div>
 
-    <a href="{{ url('/prototype/orderHome') }}">
-      <button class="call-back-btn">戻る</button>
-    </a>
-
   </div>
 
   <footer>
@@ -46,6 +42,11 @@
 @include('prototype.partials.call-confirm')
 
 <script src="{{ asset('js/call-confirm.js') }}"></script>
+<script>
+  setTimeout(function () {
+    window.location.href = "{{ url('/prototype/orderHome') }}";
+  }, 2000);
+</script>
 
 </body>
 </html>
