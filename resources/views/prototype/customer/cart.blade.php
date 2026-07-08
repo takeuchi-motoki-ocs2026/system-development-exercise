@@ -1,3 +1,7 @@
+@php
+  $cartEmpty = request('cleared') == 1;
+@endphp
+
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -32,8 +36,18 @@
   <!-- 注文一覧 -->
   <div class="history-list">
 
+    @if($cartEmpty)
+      <div class="empty-cart-message">
+        カゴの中身はありません
+      </div>
+    @else
+
     <!-- 商品 -->
     <div class="history-row">
+
+      <button class="delete-item-btn">
+        🗑
+      </button>
 
       <div class="history-item">
 
@@ -57,14 +71,14 @@
 
       </div>
 
-      <button class="delete-item-btn">
-        🗑
-      </button>
-
     </div>
 
     <!-- 商品 -->
     <div class="history-row">
+
+      <button class="delete-item-btn">
+        🗑
+      </button>
 
       <div class="history-item">
 
@@ -88,11 +102,9 @@
 
       </div>
 
-      <button class="delete-item-btn">
-        🗑
-      </button>
-
     </div>
+
+    @endif
 
   </div>
 
@@ -104,17 +116,27 @@
   <!-- ボタン -->
   <div class="cart-buttons">
 
-    <a href="{{ url('/prototype/delete') }}">
-      <button class="delete-all-btn">
+    @if($cartEmpty)
+      <button class="delete-all-btn" disabled>
         全て削除
       </button>
-    </a>
-    
-    <a href="{{ url('/prototype/confirm') }}">
-      <button class="confirm-btn">
+
+      <button class="confirm-btn" disabled>
         注文確定
       </button>
-    </a>
+    @else
+      <a href="{{ url('/prototype/delete') }}">
+        <button class="delete-all-btn">
+          全て削除
+        </button>
+      </a>
+
+      <a href="{{ url('/prototype/confirm') }}">
+        <button class="confirm-btn">
+          注文確定
+        </button>
+      </a>
+    @endif
 
   </div>
 

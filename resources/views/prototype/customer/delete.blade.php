@@ -22,14 +22,14 @@
 
     <div class="confirm-buttons">
 
+      <a href="{{ url('/prototype/cart') }}">
+        <button>いいえ</button>
+      </a>
+
       <form action="{{ url('/prototype/cart/clear') }}" method="POST" style="display:inline">
         @csrf
         <button type="submit">はい</button>
       </form>
-
-      <a href="{{ url('/prototype/cart') }}">
-        <button>いいえ</button>
-      </a>
 
     </div>
 

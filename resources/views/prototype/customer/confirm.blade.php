@@ -27,12 +27,12 @@
 
     <div class="confirm-buttons">
 
-      <a href="{{ url('/prototype/complete') }}">
-        <button>はい</button>
-      </a>
-
       <a href="{{ url('/prototype/cart') }}">
         <button>いいえ</button>
+      </a>
+
+      <a href="{{ url('/prototype/complete') }}">
+        <button>はい</button>
       </a>
 
     </div>

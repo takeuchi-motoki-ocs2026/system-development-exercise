@@ -24,8 +24,8 @@
     <div class="checkout-total">合計　1,250円</div>
 
     <div class="confirm-buttons">
+      <button onclick="history.back()">いいえ</button>
       <a href="{{ url('/prototype/thanks') }}"><button>はい</button></a>
-      <button onclick="history.back()">戻る</button>
     </div>
 
   </div>
