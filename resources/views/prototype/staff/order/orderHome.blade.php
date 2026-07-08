@@ -52,14 +52,39 @@
       
       @foreach ($products as $product)
 
-          <a href="/prototype/staff/order/detail/{{ $product->id }}" class="item">
+        @if($product->stock_status === '無')
 
-              <div class="item-text">
-                  <h2>{{ $product->name }}</h2>
-                  <p>{{ $product->price }}円</p>
+          <div class="item">
+
+            <div class="item-text">
+
+              <h2>{{ $product->name }}</h2>
+              <p>{{ $product->price }}円</p>
+
+              <div class="soldout-badge">
+
+                品切れ
+                    
               </div>
 
+            </div>
+
+          </div>
+
+        @else
+
+          <a href="/prototype/staff/order/detail/{{ $product->id }}" class="item">
+
+            <div class="item-text">
+
+              <h2>{{ $product->name }}</h2>
+              <p>{{ $product->price }}円</p>
+            
+            </div>
+
           </a>
+
+        @endif
 
       @endforeach
 
