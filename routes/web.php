@@ -42,13 +42,9 @@ Route::view('/prototype/order-menu', 'prototype.staff.order-menu')->name('protot
 
 Route::view('/prototype/order-history', 'prototype.staff.order-history')->name('prototypeorder-history');
 
-Route::view('/prototype/order-status', 'prototype.staff.order-status')->name('prototypeorder-status');
-
 Route::view('/prototype/seat-management', 'prototype.staff.seat-management')->name('prototypeseat-management');
 
 Route::view('/prototype/menu-management', 'prototype.staff.menu-management')->name('prototypemenu-management');
-
-Route::view('/prototype/stock-status', 'prototype.staff.stock-status')->name('prototypestock-status');
 
 Route::view('/prototype/menu-add', 'prototype.staff.menu-add')->name('prototypemenu-add');
 
@@ -136,3 +132,19 @@ Route::get('/prototype/menu-edit-list', [ProductController::class, 'editList'])
     ->name('prototypemenu-edit-list');
 
 Route::post('/menu/update/{id}', [ProductController::class, 'updateProduct']);
+
+// 在庫管理
+Route::get('/prototype/stock-status',[ProductController::class, 'stockStatus'])
+    ->name('prototypestock-status');
+
+// 在庫更新
+Route::post('/prototype/stock-status/update/{id}',[ProductController::class, 'updateStock']);
+
+// 注文データ取得
+Route::get('/prototype/order-status',[ProductController::class, 'orderStatus'])
+    ->name('prototypeorder-status');
+
+Route::post('/order-status/update/{id}',[ProductController::class, 'updateServed']);
+
+// 注文状況
+Route::post('/order-status/update/{id}',[ProductController::class, 'updateServed']);
