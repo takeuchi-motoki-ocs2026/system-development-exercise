@@ -60,6 +60,14 @@ class ProductController extends Controller
     public function detail($id)
     {
         $product = Product::findOrFail($id);
+
+        
+        if ($product->stock_status === '無') {
+
+            return redirect('/prototype/staff/order/home');
+
+        }
+
         return view('prototype.staff.order.detail', compact('product'));
     }
 
@@ -173,6 +181,59 @@ class ProductController extends Controller
             'prototype.staff.menu-edit-list',
             compact('products')
         );
+    }
+
+    // 在庫管理
+    public function stockStatus()
+    {
+        $products = Product::all();
+
+        return view(
+            'prototype.staff.stock-status',
+            compact('products')
+        );
+    }
+
+    // 在庫状態更新
+    public function updateStock(Request $request, $id)
+    {
+        $product = Product::findOrFail($id);
+
+        $product->stock_status = $request->stock_status;
+
+        $product->save();
+
+        return back();
+    }
+
+    // 注文データ取得
+    public function orderStatus()
+    {
+
+        $orders = Order::whereColumn(
+            'served_quantity',
+            '<',
+            'quantity'
+        )->get();
+
+        return view(
+            'prototype.staff.order-status',
+            compact('orders')
+        );
+    }
+    
+    public function updateServed(Request $request, $id)
+    {
+        $order = Order::findOrFail($id);
+
+        $order->served_quantity =
+            $request->served_quantity;
+
+        $order->save();
+
+        return response()->json([
+            'success' => true
+        ]);
     }
 
 }

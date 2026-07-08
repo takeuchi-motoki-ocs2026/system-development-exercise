@@ -511,3 +511,29 @@ footer {
 .cart-buttons {
   z-index: 9;
 }
+
+/* 注文カゴの中身がないときのボタン */
+button:disabled {
+
+    background-color: #999;
+
+    color: #ddd;
+
+    cursor: not-allowed;
+}
+
+/* 品切れ表示 */
+.soldout-badge {
+
+    display: inline-block;
+
+    padding: 5px 12px;
+
+    background-color: #d96e52;
+
+    color: white;
+
+    border-radius: 15px;
+
+    font-size: 14px;
+}

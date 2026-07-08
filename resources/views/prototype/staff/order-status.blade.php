@@ -191,70 +191,34 @@ tbody tr {
                 <th>配膳数</th>
             </tr>
         </thead>
-
+        
         <tbody>
 
-            <tr>
+        @foreach($orders as $order)
 
-                <td>2</td>
+        <tr data-id="{{ $order->id }}">
 
-                <td>ねぎま(塩)</td>
+            <td>{{ $order->seat }}</td>
 
-                <!-- 注文個数セル -->
-                <td class="count clickable"
-                    onclick="openModal(this, 'order')">
+            <td>{{ $order->name }}</td>
 
-                    5
+            <td class="count clickable"
+                onclick="openModal(this, 'order')">
 
-                </td>
+                {{ $order->quantity }}
 
-                <!-- 配膳数セル -->
-                <td class="served clickable"
-                    onclick="openModal(this, 'served')">
+            </td>
 
-                    0
+            <td class="served clickable"
+                onclick="openModal(this, 'served')">
 
-                </td>
+                {{ $order->served_quantity ?? 0 }}
 
-            </tr>
+            </td>
 
-            <tr>
+        </tr>
 
-                <td>2</td>
-
-                <td>生ビール</td>
-
-                <td class="count clickable"
-                    onclick="openModal(this, 'order')">
-
-                    3
-
-                </td>
-
-                <td class="served clickable"
-                    onclick="openModal(this, 'served')">
-
-                    0
-
-                </td>
-
-            </tr>
-
-            <!-- 空行 -->
-
-            <tr>
-                <td>&nbsp;</td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-
-            <tr>
-                <td>&nbsp;</td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
+        @endforeach
 
         </tbody>
 
@@ -327,15 +291,21 @@ tbody tr {
 
 let currentCell = null;
 
+let currentOrderId = null;
+
 let currentCount = 1;
 
 let currentMode = "";
+
+let maxOrderCount = 0;
 
 /* ===== モーダルを開く ===== */
 
 function openModal(cell, mode) {
 
     currentCell = cell;
+
+    currentOrderId = cell.parentElement.dataset.id;
 
     currentMode = mode;
 
@@ -347,8 +317,18 @@ function openModal(cell, mode) {
     const item =
         row.cells[1].innerText;
 
-    currentCount =
-        Number(cell.innerText);
+    maxOrderCount =
+        Number(row.cells[2].innerText);
+    
+    if(mode === "served")
+    {
+        currentCount = 0;
+    }
+    else
+    {
+        currentCount =
+            Number(cell.innerText);
+    }
 
     document.getElementById("seatText").innerText =
         "席番号：" + seat;
@@ -378,7 +358,17 @@ function openModal(cell, mode) {
 
 function increaseCount() {
 
-    currentCount++;
+    if(currentMode === "served")
+    {
+        if(currentCount < maxOrderCount)
+        {
+            currentCount++;
+        }
+    }
+    else
+    {
+        currentCount++;
+    }
 
     document.getElementById("modalCount").innerText =
         currentCount;
@@ -408,14 +398,50 @@ function decreaseCount() {
 }
 
 /* ===== 変更 ===== */
+function changeCount()
+{
+    fetch(
+        "/order-status/update/" + currentOrderId,
+        {
+            method: "POST",
 
-function changeCount() {
+            headers: {
+                "Content-Type":
+                    "application/json",
 
-    currentCell.innerText =
-        currentCount;
+                "X-CSRF-TOKEN":
+                    "{{ csrf_token() }}"
+            },
 
-    document.getElementById("modal").style.display =
-        "none";
+            body: JSON.stringify({
+                served_quantity:
+                    currentCount
+            })
+        }
+    )
+    .then(response => response.json())
+    .then(data => {
+
+        currentCell.innerText =
+            currentCount;
+
+        const row =
+            currentCell.parentElement;
+
+        const orderCount =
+            Number(row.cells[2].innerText);
+
+        const servedCount =
+            Number(row.cells[3].innerText);
+
+        if(orderCount === servedCount)
+        {
+            row.remove();
+        }
+
+        document.getElementById("modal").style.display =
+            "none";
+    });
 }
 
 /* ===== モーダル外クリック ===== */

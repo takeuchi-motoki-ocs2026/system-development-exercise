@@ -139,76 +139,46 @@ tbody tr {
 
         <tbody>
 
+            @foreach($products as $product)
+            
             <tr>
 
-                <td>ねぎま(塩)</td>
+                <td>{{ $product->name }}</td>
 
                 <td>
 
-                    <select class="stock-select">
+                    <form action="/prototype/stock-status/update/{{ $product->id }}" method="POST">
 
-                        <option>有</option>
+                    @csrf
 
-                        <option>無</option>
+                    <select 
+                        name="stock_status"
+                        class="stock-select"
+                        onchange="this.form.submit()">
+
+                        <option value="有"
+                            {{ $product->stock_status == '有' ? 'selected' : '' }}>
+
+                            有
+
+                        </option>
+
+                        <option value="無"
+                            {{ $product->stock_status == '無' ? 'selected' : '' }}>
+
+                            無
+
+                        </option>
 
                     </select>
+
+                    </form>
 
                 </td>
 
             </tr>
 
-            <tr>
-
-                <td>生ビール</td>
-
-                <td>
-
-                    <select class="stock-select">
-
-                        <option>有</option>
-
-                        <option>無</option>
-
-                    </select>
-
-                </td>
-
-            </tr>
-
-            <tr>
-
-                <td>コークハイ</td>
-
-                <td>
-
-                    <select class="stock-select">
-
-                        <option>有</option>
-
-                        <option>無</option>
-
-                    </select>
-
-                </td>
-
-            </tr>
-
-            <!-- 空行 -->
-
-            <tr>
-                <td>&nbsp;</td>
-                <td></td>
-            </tr>
-
-            <tr>
-                <td>&nbsp;</td>
-                <td></td>
-            </tr>
-
-            <tr>
-                <td>&nbsp;</td>
-                <td></td>
-            </tr>
+            @endforeach
 
         </tbody>
 
