@@ -85,7 +85,7 @@
 
     <a href="{{ url('/prototype/orderHome') }}">
       <button>
-        注文
+        注文<br>追加
       </button>
     </a>
 

@@ -1,6 +1,8 @@
 const cartList = document.querySelector(".history-list");
 const totalArea = document.querySelector(".total-area");
 const deleteAllBtn = document.querySelector(".delete-all-btn");
+const confirmBtn = document.querySelector(".confirm-btn");
+const emptyCartMessage = '<div class="empty-cart-message">カゴの中身はありません</div>';
 
 function toNumber(value) {
   const normalized = value
@@ -30,13 +32,67 @@ function updateButtonStates(row) {
   if (plusBtn) plusBtn.disabled = countValue >= 4;
 }
 
+function updateCartState() {
+  const rows = Array.from(document.querySelectorAll(".history-row"));
+  const isEmpty = rows.length === 0;
+
+  if (deleteAllBtn) {
+    deleteAllBtn.disabled = isEmpty;
+    const deleteLink = deleteAllBtn.closest("a");
+    if (deleteLink) {
+      if (isEmpty) {
+        deleteLink.removeAttribute("href");
+      } else {
+        const originalHref = deleteAllBtn.dataset.originalHref || deleteLink.getAttribute("href");
+        if (originalHref) {
+          deleteLink.setAttribute("href", originalHref);
+        }
+      }
+    }
+  }
+
+  if (confirmBtn) {
+    confirmBtn.disabled = isEmpty;
+    const confirmLink = confirmBtn.closest("a");
+    if (confirmLink) {
+      if (isEmpty) {
+        confirmLink.removeAttribute("href");
+      } else {
+        const originalHref = confirmBtn.dataset.originalHref || confirmLink.getAttribute("href");
+        if (originalHref) {
+          confirmLink.setAttribute("href", originalHref);
+        }
+      }
+    }
+  }
+
+  if (cartList) {
+    if (isEmpty) {
+      cartList.innerHTML = emptyCartMessage;
+    } else {
+      const emptyMessage = cartList.querySelector(".empty-cart-message");
+      if (emptyMessage) {
+        emptyMessage.remove();
+      }
+    }
+  }
+
+  if (totalArea) {
+    totalArea.textContent = isEmpty ? "合計　0円" : `合計　${rows.reduce((sum, row) => {
+      const priceText = row.querySelector(".item-price").textContent;
+      const countText = row.querySelector(".item-count").textContent;
+      return sum + toNumber(priceText) * toNumber(countText);
+    }, 0)}円`;
+  }
+}
+
 function bindDeleteButtons() {
   document.querySelectorAll(".delete-item-btn").forEach((button) => {
     button.addEventListener("click", () => {
       const row = button.closest(".history-row");
       if (row) {
         row.remove();
-        updateTotal();
+        updateCartState();
       }
     });
   });
@@ -67,22 +123,28 @@ function bindQuantityButtons() {
 }
 
 if (deleteAllBtn) {
+  deleteAllBtn.dataset.originalHref = deleteAllBtn.closest("a")?.getAttribute("href") || "";
   deleteAllBtn.addEventListener("click", () => {
-    cartList.innerHTML = "";
-    updateTotal();
+    if (cartList) {
+      cartList.innerHTML = "";
+    }
+    updateCartState();
   });
+}
+
+if (confirmBtn) {
+  confirmBtn.dataset.originalHref = confirmBtn.closest("a")?.getAttribute("href") || "";
 }
 
 window.addEventListener("DOMContentLoaded", () => {
   bindDeleteButtons();
   bindQuantityButtons();
   
-  // Initialize button states
   document.querySelectorAll(".history-row").forEach((row) => {
     updateButtonStates(row);
   });
-  
-  updateTotal();
+
+  updateCartState();
 });
 
 // If redirected after server-side clear, remove displayed items as well
@@ -93,7 +155,7 @@ window.addEventListener("DOMContentLoaded", () => {
       if (cartList) {
         cartList.innerHTML = '';
       }
-      updateTotal();
+      updateCartState();
       // Optionally clear any client-side storage key named 'cart'
       try { localStorage.removeItem('cart'); } catch (e) {}
     }
