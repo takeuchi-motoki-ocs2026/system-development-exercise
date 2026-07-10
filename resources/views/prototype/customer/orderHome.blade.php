@@ -38,7 +38,7 @@
 
   <footer>
 
-    <button type="button">注文</button>
+    <button type="button">注文<br>追加</button>
 
     <a href="{{ url('/prototype/cart') }}">
       <button>注文<br>カゴ</button>

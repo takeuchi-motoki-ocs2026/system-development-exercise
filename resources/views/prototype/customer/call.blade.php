@@ -25,7 +25,7 @@
 
   <footer>
 
-    <a href="{{ url('/prototype/orderHome') }}"><button>注文</button></a>
+    <a href="{{ url('/prototype/orderHome') }}"><button>注文<br>追加</button></a>
 
     <a href="{{ url('/prototype/cart') }}"><button>注文<br>カゴ</button></a>
 
