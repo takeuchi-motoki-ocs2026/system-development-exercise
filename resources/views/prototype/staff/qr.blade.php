@@ -57,17 +57,14 @@ h2{
 }
 
 .qr-box{
-    width:230px;
-    height:230px;
     margin:50px auto;
-    background:#d3d3d3;
+    background:white;
+    padding:15px;
     border:1px solid #666;
 
     display:flex;
     justify-content:center;
     align-items:center;
-
-    font-size:22px;
 }
 
 .seat-label{
@@ -98,14 +95,21 @@ h2{
     <h2>空席管理</h2>
 
     <div class="qr-box">
-        QRコード
+
+        @php
+        $url = url('/prototype/orderHome')
+            . '?seat=' . $seat
+        @endphp
+
+        {!! QrCode::size(200)->generate($url) !!}
+
     </div>
 
     <div id="seatLabel" class="seat-label"></div>
 
     <button
         class="back-btn"
-        onclick="history.back()">
+        onclick="location.href='{{ route('prototype.staff.vacancy') }}'">
         戻る
     </button>
 

@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>空席管理</title>
+<title>入店案内</title>
 
 <style>
 body {
@@ -167,7 +167,7 @@ tbody tr {
 
 <div class="container">
 
-    <h2>空席管理</h2>
+    <h2>入店案内</h2>
 
     <table>
 
@@ -181,73 +181,33 @@ tbody tr {
 
         <tbody>
 
-            <tr>
-                <td>1</td>
-                <td>6</td>
-                <td>
-                    <button
-                        class="select-btn"
-                        onclick="openCourseModal(1)">
-                        選択
-                    </button>
-                </td>
-            </tr>
+        @foreach($tables as $table)
 
-            <tr>
-                <td>2</td>
-                <td>6</td>
-                <td>
-                    <button
-                        class="select-btn"
-                        onclick="openCourseModal(2)">
-                        選択
-                    </button>
-                </td>
-            </tr>
+        @if($table->seat_status === 'available')
 
-            <tr>
-                <td>3</td>
-                <td>6</td>
-                <td>
-                    <button
-                        class="select-btn"
-                        onclick="openCourseModal(3)">
-                        選択
-                    </button>
-                </td>
-            </tr>
+        <tr>
 
-            <tr>
-                <td>4</td>
-                <td>6</td>
-                <td>
-                    <button
-                        class="select-btn"
-                        onclick="openCourseModal(4)">
-                        選択
-                    </button>
-                </td>
-            </tr>
+            <td>{{ $table->table_number }}</td>
 
-            <!-- 空行 -->
+            <td>{{ $table->max_people }}</td>
 
-            <tr>
-                <td>&nbsp;</td>
-                <td></td>
-                <td></td>
-            </tr>
+            <td>
 
-            <tr>
-                <td>&nbsp;</td>
-                <td></td>
-                <td></td>
-            </tr>
+                <button
+                    class="select-btn"
+                    onclick="openCourseModal({{ $table->table_number }})">
 
-            <tr>
-                <td>&nbsp;</td>
-                <td></td>
-                <td></td>
-            </tr>
+                    選択
+
+                </button>
+
+            </td>
+
+        </tr>
+
+        @endif
+
+        @endforeach
 
         </tbody>
 
@@ -325,15 +285,28 @@ function closeCourseModal() {
 }
 
 /* コース選択 */
-function selectCourse(course) {
+function selectCourse(course)
+{
+    fetch(
+        "/seat/occupy/" + selectedSeat,
+        {
+            method: "POST",
 
-    localStorage.setItem("seat" + selectedSeat, "使");
+            headers: {
+                "X-CSRF-TOKEN":
+                    "{{ csrf_token() }}"
+            }
+        }
+    )
+    .then(() => {
 
-    location.href =
-        "/prototype/staff/qr?seat=" +
-        selectedSeat +
-        "&course=" +
-        encodeURIComponent(course);
+        location.href =
+            "/prototype/staff/qr?seat=" +
+            selectedSeat +
+            "&course=" +
+            encodeURIComponent(course);
+
+    });
 }
 
 window.onload = function(){
