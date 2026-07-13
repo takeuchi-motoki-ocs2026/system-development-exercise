@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\Order;
+use App\Models\Table;
 
 class ProductController extends Controller
 {
@@ -236,4 +237,64 @@ class ProductController extends Controller
         ]);
     }
 
+    // 空席管理
+    public function vacancyManagement()
+    {
+        $tables = Table::where(
+            'seat_status',
+            'available'
+        )->get();
+
+        return view(
+            'prototype.staff.vacancy-management',
+            compact('tables')
+        );
+    }
+
+    // 席状態（空→使）
+    public function useSeat($id)
+    {
+        $table = Table::findOrFail($id);
+
+        $table->seat_status = 'occupied';
+
+        $table->save();
+
+        return response()->json();
+    }
+
+    public function occupySeat($id)
+    {
+        $table = Table::findOrFail($id);
+
+        $table->seat_status = 'occupied';
+
+        $table->save();
+
+        return response()->json([
+            'success' => true
+        ]);
+    }
+
+    // 席状態（使→空）
+    public function emptySeat($id)
+    {
+        $table = Table::findOrFail($id);
+
+        $table->seat_status = 'available';
+
+        $table->save();
+
+        return response()->json();
+    }
+
+    public function seatManagement()
+    {
+        $tables = Table::all();
+
+        return view(
+            'prototype.staff.seat-management',
+            compact('tables')
+        );
+    }
 }

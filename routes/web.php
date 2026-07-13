@@ -42,8 +42,6 @@ Route::view('/prototype/order-menu', 'prototype.staff.order-menu')->name('protot
 
 Route::view('/prototype/order-history', 'prototype.staff.order-history')->name('prototypeorder-history');
 
-Route::view('/prototype/seat-management', 'prototype.staff.seat-management')->name('prototypeseat-management');
-
 Route::view('/prototype/menu-management', 'prototype.staff.menu-management')->name('prototypemenu-management');
 
 Route::view('/prototype/menu-add', 'prototype.staff.menu-add')->name('prototypemenu-add');
@@ -61,8 +59,6 @@ Route::view('/prototype/staff/order/complete', 'prototype.staff.order.complete')
 Route::view('/prototype/staff/order/history', 'prototype.staff.order.history')->name('prototype.staff.order.history');
 
 Route::view('/prototype/staff/order', 'prototype.staff.order')->name('prototype.staff.order');
-
-Route::view('/prototype/staff/vacancy', 'prototype.staff.vacancy-management')->name('prototype.staff.vacancy');
 
 Route::get('/prototype/staff/qr', function (Request $request) {
     return view('prototype.staff.qr', [
@@ -148,3 +144,19 @@ Route::post('/order-status/update/{id}',[ProductController::class, 'updateServed
 
 // 注文状況
 Route::post('/order-status/update/{id}',[ProductController::class, 'updateServed']);
+
+// 空席管理
+Route::get('/prototype/staff/vacancy',[ProductController::class, 'vacancyManagement'])
+    ->name('prototype.staff.vacancy');
+
+// 席状態（空→使）
+Route::post('/seat/use/{id}',[ProductController::class, 'useSeat']);
+
+Route::post('/seat/occupy/{id}',[ProductController::class, 'occupySeat']);
+
+// 席状態（使→空）
+Route::post('/seat/empty/{id}',[ProductController::class, 'emptySeat']);
+
+// 座席管理
+Route::get('/prototype/seat-management',[ProductController::class, 'seatManagement'])
+    ->name('prototypeseat-management');

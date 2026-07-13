@@ -79,7 +79,7 @@ h2 {
     </div>
 
     <div class="menu-btn" onclick="location.href='{{ route('prototype.staff.vacancy') }}'">
-        空席管理
+        入店案内
     </div>
 
     <div class="menu-btn" onclick="location.href='{{ route('prototype.staff.order') }}'">

@@ -247,87 +247,40 @@ tbody tr {
 
     <tbody>
 
-        <tr>
-            <td>1</td>
-            <td>6</td>
-            <td class="seat-cell use-seat"
-                onclick="openConfirm(this)">
-                使
-            </td>
-            <td>
-                <select class="status-select">
-                    <option></option>
-                    <option>対応中</option>
-                    <option>会計待ち</option>
-                    <option>掃除</option>
-                </select>
-            </td>
-        </tr>
+    @foreach($tables as $table)
 
-        <tr>
-            <td>2</td>
-            <td>6</td>
-            <td>空</td>
-            <td>
-                <select class="status-select" disabled>
-                    <option></option>
-                    <option>対応中</option>
-                    <option>会計待ち</option>
-                    <option>掃除</option>
-                </select>
-            </td>
-        </tr>
+    <tr data-id="{{ $table->table_id }}">
 
-        <tr>
-            <td>3</td>
-            <td>6</td>
-            <td>空</td>
-            <td>
-                <select class="status-select" disabled>
-                    <option></option>
-                    <option>対応中</option>
-                    <option>会計待ち</option>
-                    <option>掃除</option>
-                </select>
-            </td>
-        </tr>
+        <td>{{ $table->table_number }}</td>
 
-        <tr>
-            <td>4</td>
-            <td>6</td>
-            <td>空</td>
-            <td>
-                <select class="status-select" disabled>
-                    <option></option>
-                    <option>対応中</option>
-                    <option>会計待ち</option>
-                    <option>掃除</option>
-                </select>
-            </td>
-        </tr>
+        <td>{{ $table->max_people }}</td>
 
-        <!-- 空行 -->
+        <td
+            class="seat-cell {{ $table->seat_status === 'occupied' ? 'use-seat' : '' }}"
+            onclick="openConfirm(this)">
 
-            <tr>
-                <td>&nbsp;</td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
+            {{ $table->seat_status === 'occupied' ? '使' : '空' }}
 
-            <tr>
-                <td>&nbsp;</td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
+        </td>
 
-            <tr>
-                <td>&nbsp;</td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
+        <td>
+
+            <select
+                class="status-select"
+                {{ $table->seat_status === 'available' ? 'disabled' : '' }}>
+
+                <option></option>
+                <option>対応中</option>
+                <option>会計待ち</option>
+                <option>掃除</option>
+
+            </select>
+
+        </td>
+
+    </tr>
+
+    @endforeach
 
     </tbody>
 
@@ -424,52 +377,34 @@ function changeToEmpty(){
         }
 
         const seatNo = row.cells[0].innerText;
-        localStorage.setItem("seat" + seatNo, "空");
+
+        const tableId = row.dataset.id;
+
+        fetch(
+            "/seat/empty/" + tableId,
+            {
+                method: "POST",
+
+                headers: {
+                    "X-CSRF-TOKEN":
+                        "{{ csrf_token() }}"
+                }
+            }
+        )
+        .then(() => {
+
+            selectedSeat.innerText = "空";
+
+            selectedSeat.classList.remove("use-seat");
+
+            status.selectedIndex = 0;
+
+            status.disabled = true;
+        });
     }
 
     closeModal();
 }
-
-window.onload = function(){
-
-    for(let i = 1; i <= 4; i++){
-        if(!localStorage.getItem("seat" + i)){
-            localStorage.setItem("seat" + i, "使");
-        }
-    }
-
-    document.querySelectorAll("tbody tr").forEach(row => {
-
-        const seatNo = row.cells[0].textContent.trim();
-        const state = localStorage.getItem("seat" + seatNo);
-
-        const seatCell = row.querySelector(".seat-cell");
-        const status = row.querySelector(".status-select");
-
-        // ★デフォルトは「使」
-        if(!state || state === "使"){
-
-            seatCell.innerText = "使";
-            seatCell.classList.add("use-seat");
-
-            if(status){
-                status.disabled = false;
-            }
-        }
-
-        // ★空の場合
-        if(state === "空"){
-
-            seatCell.innerText = "空";
-            seatCell.classList.remove("use-seat");
-
-            if(status){
-                status.disabled = true;
-                status.selectedIndex = 0;
-            }
-        }
-    });
-};
 
 </script>
 
