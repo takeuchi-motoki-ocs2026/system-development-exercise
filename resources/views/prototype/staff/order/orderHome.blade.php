@@ -54,7 +54,7 @@
 
         @if($product->stock_status === '無')
 
-          <div class="item">
+          <div class="item sold-out">
 
             <div class="item-text">
 
@@ -69,6 +69,12 @@
 
             </div>
 
+            <div class="item-image">
+
+              <img src="{{ asset('storage/' . $product->image) }}" class="item">
+
+            </div>
+
           </div>
 
         @else
@@ -79,7 +85,13 @@
 
               <h2>{{ $product->name }}</h2>
               <p>{{ $product->price }}円</p>
-            
+
+            </div>
+
+            <div class="item-image">
+
+              <img src="{{ asset('storage/' . $product->image) }}">
+
             </div>
 
           </a>

@@ -320,15 +320,8 @@ function openModal(cell, mode) {
     maxOrderCount =
         Number(row.cells[2].innerText);
     
-    if(mode === "served")
-    {
-        currentCount = 0;
-    }
-    else
-    {
-        currentCount =
-            Number(cell.innerText);
-    }
+    currentCount =
+        Number(cell.innerText);
 
     document.getElementById("seatText").innerText =
         "席番号：" + seat;
