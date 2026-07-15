@@ -523,6 +523,25 @@ button:disabled {
 }
 
 /* 品切れ表示 */
+.sold-out-label {
+
+    display: inline-block;
+
+    margin-top: 8px;
+
+    padding: 3px 9px;
+
+    background: #de7b58;
+
+    color: white;
+
+    border-radius: 15px;
+
+    font-size: 11px;
+
+    line-height: 1.2;
+}
+
 .soldout-badge {
 
     display: inline-block;
@@ -536,4 +555,21 @@ button:disabled {
     border-radius: 15px;
 
     font-size: 14px;
+}
+
+/* 商品画像 */
+.item-image{
+    background: transparent;
+    padding: 0;
+    border: none;
+}
+
+.item-image img{
+    width:120px;
+    height:80px;
+    object-fit:cover;
+    display:block;
+    background:none;
+    border:none;
+    box-shadow:none;
 }

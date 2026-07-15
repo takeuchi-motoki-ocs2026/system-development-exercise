@@ -25,13 +25,24 @@ class ProductController extends Controller
     // 登録処理（menu-add用）
     public function store(Request $request)
     {
+        $imagePath = null;
+
+        if ($request->hasFile('image')) {
+
+            $imagePath = $request
+                ->file('image')
+                ->store('products', 'public');
+        }
+
         Product::create([
             'name' => $request->name,
             'price' => $request->price,
+            'image' => $imagePath,
             'shop_id' => 1
         ]);
 
         return redirect('/prototype/staff/order/home');
+    
     }
 
     public function add(Request $request, $id)

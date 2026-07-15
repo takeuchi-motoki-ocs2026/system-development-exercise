@@ -357,6 +357,7 @@ input[type="number"]::-webkit-inner-spin-button {
 
         <input type="file"
             id="imageInput"
+            name="image"
             accept="image/*"
             style="display:none"
             onchange="previewImage(event)">
