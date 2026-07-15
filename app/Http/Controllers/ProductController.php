@@ -261,7 +261,6 @@ class ProductController extends Controller
         return view('prototype.customer.detail', compact('product'));
     }
 
-=======
     // 空席管理
     public function vacancyManagement()
     {
