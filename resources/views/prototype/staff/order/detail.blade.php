@@ -37,9 +37,9 @@
 
   <div class="detail-info">
 
-    <h2>ねぎま</h2>
+    <h2>{{ $product->name }}</h2>
 
-    <p>150円</p>
+    <p>{{ $product->price }}円</p>
 
   </div>
 
