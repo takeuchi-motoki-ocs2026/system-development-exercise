@@ -236,4 +236,28 @@ class ProductController extends Controller
         ]);
     }
 
+    ///客用
+    public function customerIndex(Request $request)
+    {
+        $products = Product::all();
+        $seat = $request->query('seat');
+
+        if ($seat !== null) {
+            session(['seat' => $seat]);
+        }
+
+        return view('prototype.customer.orderHome', compact('products', 'seat'));
+    }
+
+    public function customerDetail($id)
+    {
+        $product = Product::findOrFail($id);
+
+        if ($product->stock_status === '無') {
+            return redirect('/prototype/orderHome');
+        }
+
+        return view('prototype.customer.detail', compact('product'));
+    }
+
 }

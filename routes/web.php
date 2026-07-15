@@ -2,20 +2,21 @@
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
+use App\Http\Controllers\ProductController;
 
-Route::get('/', function () {
-    return view('prototype.customer.orderHome');
-});
+Route::get('/', [ProductController::class, 'customerIndex']);
 
 Route::view('/prototype', 'prototype.customer.index')->name('prototype');
 
 
 Route::view('/prototype/home', 'prototype.customer.home')->name('prototypehome');
 
-Route::view('/prototype/orderHome', 'prototype.customer.orderHome')->name('prototypeorderHome');
+Route::get('/prototype/orderHome', [ProductController::class, 'customerIndex'])
+    ->name('prototypeorderHome');
 
-Route::view('/prototype/detail', 'prototype.customer.detail')->name('prototypedetail');
-
+Route::get('/prototype/detail/{id}', [ProductController::class, 'customerDetail'])
+    ->name('prototypedetail');
+    
 Route::view('/prototype/cart', 'prototype.customer.cart')->name('prototypecart');
 
 Route::view('/prototype/delete', 'prototype.customer.delete')->name('prototypedelete');
@@ -85,14 +86,6 @@ Route::post('/prototype/staff/order/cart/clear', function (Request $request) {
 
 
 
-
-
-
-
-
-
-
-use App\Http\Controllers\ProductController;
 
 // 一覧表示
 Route::get('/prototype/staff/order/home', [ProductController::class, 'index'])
