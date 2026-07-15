@@ -34,7 +34,33 @@
     
   </nav>
 
-  <main id="menu-list"></main>
+  <main id="menu-list">
+
+  @foreach($products as $product)
+
+    @if($product->stock_status === '無')
+      <div class="item">
+        <div class="item-text">
+          <h2>{{ $product->name }}</h2>
+            <p>{{ $product->price }}円</p>
+
+              <span class="sold-out-label">品切れ</span>
+        </div>
+      </div>
+
+      @else
+        <a href="{{ url('/prototype/detail/'.$product->id) }}" class="item">
+          <div class="item-text">
+            <h2>{{ $product->name }}</h2>
+              <p>{{ $product->price }}円</p>
+          </div>
+        </a>
+
+      @endif
+
+  @endforeach
+
+  </main>
 
   <footer>
 
@@ -63,7 +89,7 @@
 @include('prototype.partials.call-confirm')
 
 <script src="{{ asset('js/call-confirm.js') }}"></script>
-<script src="{{ asset('js/order-home.js') }}"></script>
+<!-- <script src="{{ asset('js/order-home.js') }}"></script> -->
 
 </body>
 </html>
