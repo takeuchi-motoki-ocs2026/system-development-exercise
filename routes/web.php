@@ -114,6 +114,9 @@ Route::get('/prototype/staff/staff-history', [ProductController::class, 'history
 // 更新処理
 Route::get('/menu/edit/{id}', [ProductController::class, 'edit']);
 
+Route::post('/menu/edit/{id}',[ProductController::class, 'updateProduct'])
+    ->name('prototypemenu-update');
+
 // 削除処理
 Route::delete('/menu/delete/{id}', [ProductController::class, 'destroy']);
 

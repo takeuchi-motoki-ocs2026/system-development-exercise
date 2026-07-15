@@ -344,6 +344,14 @@ input[type="number"]::-webkit-inner-spin-button {
 
 <div class="container">
 
+<form
+    id="editForm"
+    action="/menu/edit/{{ $product->id }}"
+    method="POST"
+    enctype="multipart/form-data">
+
+    @csrf
+
     <h2>メニュー編集</h2>
 
     <!-- ===== 画像 ===== -->
@@ -351,10 +359,14 @@ input[type="number"]::-webkit-inner-spin-button {
     <div class="image-box"
         onclick="document.getElementById('imageInput').click()">
 
-        <img id="preview"
-            style="display:none;">
+        <img
+            id="preview"
+            src="{{ asset('storage/' . $product->image) }}"
+            style="{{ $product->image ? '' : 'display:none;' }}">
 
-        <span id="imageText">
+        <span 
+            id="imageText"
+            style="{{ $product->image ? 'display:none;' : '' }}">
 
             写真
 
@@ -366,6 +378,7 @@ input[type="number"]::-webkit-inner-spin-button {
 
     <input type="file"
         id="imageInput"
+        name="image"
         accept="image/*"
         capture="environment"
         style="display:none"
@@ -377,8 +390,11 @@ input[type="number"]::-webkit-inner-spin-button {
 
         <span>商品名：</span>
 
-        <input type="text"
-            id="menuName">
+        <input
+            type="text"
+            id="menuName"
+            name="name"
+            value="{{ $product->name }}">
 
     </div>
 
@@ -388,8 +404,11 @@ input[type="number"]::-webkit-inner-spin-button {
 
         <span>値段：</span>
 
-        <input type="number"
-            id="menuPrice">
+        <input
+            type="number"
+            id="menuPrice"
+            name="price"
+            value="{{ $product->price }}">
 
     </div>
 
@@ -408,7 +427,9 @@ input[type="number"]::-webkit-inner-spin-button {
 
         <!-- ===== 編集 ===== -->
 
-        <button class="edit-btn"
+        <button
+            type="button"
+            class="edit-btn"
             onclick="openModal()">
 
             編集
@@ -416,6 +437,8 @@ input[type="number"]::-webkit-inner-spin-button {
         </button>
 
     </div>
+
+</form>
 
 </div>
 
@@ -538,11 +561,9 @@ function closeModal() {
 
 /* ===== 編集 ===== */
 
-function completeEdit() {
-
-    alert("編集しました");
-
-    closeModal();
+function completeEdit()
+{
+    document.getElementById("editForm").submit();
 }
 
 </script>

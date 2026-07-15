@@ -29,19 +29,23 @@
 
   <nav class="tabs">
 
-    <button class="tab active" onclick="showMenu('food', event)">
+    <button class="tab {{ $category == 'food' ? 'active' : '' }}"
+    onclick="location.href='/prototype/staff/order/home?category=food'">
       料理
     </button>
 
-    <button class="tab" onclick="showMenu('drink', event)">
+    <button class="tab {{ $category == 'drink' ? 'active' : '' }}"
+    onclick="location.href='/prototype/staff/order/home?category=drink'">
       ドリンク
     </button>
 
-    <button class="tab" onclick="showMenu('service', event)">
+    <button class="tab {{ $category == 'service' ? 'active' : '' }}"
+    onclick="location.href='/prototype/staff/order/home?category=service'">
       サービス
     </button>
 
-    <button class="tab" onclick="showMenu('limited', event)">
+    <button class="tab {{ $category == 'limited' ? 'active' : '' }}"
+    onclick="location.href='/prototype/staff/order/home?category=limited'">
       店舗限定
     </button>
     

@@ -378,6 +378,24 @@ input[type="number"]::-webkit-inner-spin-button {
 
         </div>
 
+        <div class="input-box">
+
+            <span>カテゴリ：</span>
+
+            <select name="category">
+
+                <option value="food">料理</option>
+
+                <option value="drink">ドリンク</option>
+
+                <option value="service">サービス</option>
+
+                <option value="limited">店舗限定</option>
+
+            </select>
+
+        </div>
+
         <div class="button-area">
 
             <button class="back-btn" type="button"

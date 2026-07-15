@@ -12,14 +12,23 @@ class ProductController extends Controller
     // 一覧表示（orderHome用）
     public function index(Request $request)
     {
-        $products = Product::all();
+        $category = $request->query('category', 'food');
+
+        $products = Product::where(
+            'category',
+            $category
+        )->get();
+
         $seat = $request->query('seat');
 
         if ($seat !== null) {
             session(['seat' => $seat]);
         }
 
-        return view('prototype.staff.order.orderHome', compact('products', 'seat'));
+        return view(
+            'prototype.staff.order.orderHome',
+            compact('products', 'seat', 'category')
+        );
     }
 
     // 登録処理（menu-add用）
@@ -38,6 +47,7 @@ class ProductController extends Controller
             'name' => $request->name,
             'price' => $request->price,
             'image' => $imagePath,
+            'category' => $request->category,
             'shop_id' => 1
         ]);
 
@@ -163,9 +173,19 @@ class ProductController extends Controller
     ){
         $product = Product::findOrFail($id);
 
+        $imagePath = $product->image;
+
+        if ($request->hasFile('image')) {
+
+            $imagePath = $request
+                ->file('image')
+                ->store('products', 'public');
+        }
+
         $product->update([
             'name' => $request->name,
             'price' => $request->price,
+            'image' => $imagePath,
         ]);
 
         return redirect(
