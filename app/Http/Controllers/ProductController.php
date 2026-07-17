@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\Order;
 use App\Models\Table;
+use App\Models\ProductOption;
 
 class ProductController extends Controller
 {
@@ -43,13 +44,29 @@ class ProductController extends Controller
                 ->store('products', 'public');
         }
 
-        Product::create([
+        $product = Product::create([
             'name' => $request->name,
             'price' => $request->price,
             'image' => $imagePath,
             'category' => $request->category,
+            'has_option' => $request->has_option,
             'shop_id' => 1
         ]);
+
+        if ($request->has_option) {
+
+            foreach ($request->options as $option) {
+
+                if (trim($option) !== '') {
+
+                    ProductOption::create([
+                        'product_id' => $product->id,
+                        'option_name' => $option
+                    ]);
+
+                }
+            }
+        }
 
         return redirect('/prototype/staff/order/home');
     

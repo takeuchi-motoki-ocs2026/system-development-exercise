@@ -11,8 +11,16 @@ class Product extends Model
         'price',
         'image',
         'category',
+        'has_option',
         'is_available',
         'shop_id',
         'stock_status'
     ];
+
+    public function options()
+    {
+        return $this->hasMany(
+            ProductOption::class
+        );
+    }
 }

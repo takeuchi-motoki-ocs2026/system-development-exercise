@@ -396,6 +396,57 @@ input[type="number"]::-webkit-inner-spin-button {
 
         </div>
 
+        <div class="input-box">
+
+            <span>オプション：</span>
+
+            <select
+                name="has_option"
+                id="hasOption">
+
+                <option value="0">
+
+                    なし
+
+                </option>
+
+                <option value="1">
+
+                    あり
+
+                </option>
+
+            </select>
+
+        </div>
+
+        <div
+            id="optionArea"
+            style="display:none;">
+
+            <div id="optionList">
+
+            <div class="input-box">
+
+            <span>オプション：</span>
+
+            <input
+                type="text"
+                name="options[]"
+                placeholder="例：タレ">
+
+            </div>
+
+            </div>
+
+            <button
+                type="button"
+                onclick="addOption()">
+                ＋
+            </button>
+            
+        </div>
+
         <div class="button-area">
 
             <button class="back-btn" type="button"
@@ -559,6 +610,51 @@ function addMenu() {
     alert("追加しました");
 
     closeModal();
+}
+
+const hasOption =
+    document.querySelector(
+        'select[name="has_option"]'
+    );
+
+const optionArea =
+    document.getElementById(
+        "optionArea"
+    );
+
+hasOption.addEventListener(
+    "change",
+    function() {
+
+        optionArea.style.display =
+            this.value === "1"
+                ? "block"
+                : "none";
+    }
+);
+
+function addOption()
+{
+    const div =
+        document.createElement("div");
+
+    div.className =
+        "input-box";
+
+    div.innerHTML = `
+
+        <span>オプション：</span>
+
+        <input
+            type="text"
+            name="options[]"
+            placeholder="例：塩">
+
+    `;
+
+    document
+        .getElementById("optionList")
+        .appendChild(div);
 }
 
 </script>

@@ -43,12 +43,25 @@
 
   </div>
 
+  @if($product->has_option)
+
   <div class="flavor">
 
-    <button type="button" id="tareBtn">タレ</button>
-    <button type="button" id="shioBtn">塩</button>
+      @foreach($product->options as $option)
+
+          <button
+              type="button"
+              class="option-btn">
+
+              {{ $option->option_name }}
+
+          </button>
+
+      @endforeach
 
   </div>
+
+  @endif
 
   <div class="counter">
 
@@ -65,7 +78,7 @@
 
     <div class="actions">
 
-      <input type="hidden" name="taste" id="tasteInput">
+      <input type="hidden" name="option" id="optionInput">
       <input type="hidden" name="quantity" id="quantityInput" value="1">
 
       <a href="{{ url('/prototype/staff/order/home') }}">
@@ -96,32 +109,54 @@
 <script>
   let count = 1;
 
+  const optionButtons = document.querySelectorAll('.option-btn');
+  let selectedOption = '';
+  optionButtons.forEach(button => {
+
+    button.addEventListener(
+        'click',
+        () => {
+
+            optionButtons.forEach(btn =>
+                btn.classList.remove(
+                    'selected'
+                )
+            );
+
+            button.classList.add(
+                'selected'
+            );
+
+            selectedOption =
+                button.textContent.trim();
+
+            enableCounter();
+        }
+    );
+
+});
   const countText = document.getElementById('count');
   const plusBtn = document.getElementById('plusBtn');
   const minusBtn = document.getElementById('minusBtn');
-  const tareBtn = document.getElementById('tareBtn');
-  const shioBtn = document.getElementById('shioBtn');
   const orderBtn = document.getElementById('orderBtn');
+  if (optionButtons.length === 0) {
+
+    plusBtn.disabled = false;
+
+    orderBtn.disabled = false;
+}
 
   function enableCounter() {
     count = 1;
+
     countText.textContent = count;
+
     plusBtn.disabled = false;
+
     minusBtn.disabled = true;
+
     orderBtn.disabled = false;
-    tareBtn.classList.remove('selected');
-    shioBtn.classList.remove('selected');
   }
-
-  tareBtn.addEventListener('click', () => {
-    enableCounter();
-    tareBtn.classList.add('selected');
-  });
-
-  shioBtn.addEventListener('click', () => {
-    enableCounter();
-    shioBtn.classList.add('selected');
-  });
 
   plusBtn.addEventListener('click', () => {
     if (count < 5) {
@@ -153,25 +188,37 @@
     }
   });
 
-  orderBtn.addEventListener('click', () => {
-    if (!tareBtn.classList.contains('selected') && !shioBtn.classList.contains('selected')) {
-      alert('味を選択してください');
-      return;
+  orderBtn.addEventListener(
+    'click',
+    () => {
+
+        if (
+            optionButtons.length > 0 &&
+            selectedOption === ''
+        ) {
+
+            alert(
+                'オプションを選択してください'
+            );
+
+            return;
+        }
+
+        document.getElementById(
+            'optionInput'
+        ).value =
+            selectedOption;
+
+        document.getElementById(
+            'quantityInput'
+        ).value =
+            count;
+
+        document
+            .querySelector('form')
+            .submit();
     }
-
-    if (count > 0) {
-
-      const taste = tareBtn.classList.contains('selected') ? 'タレ' : '塩';
-
-      document.getElementById('tasteInput').value = taste;
-      document.getElementById('quantityInput').value = count;
-
-      document.querySelector('form').submit();
-
-    } else {
-      alert('数量を選択してください');
-    }
-  });
+);
 </script>
 
 </body>
