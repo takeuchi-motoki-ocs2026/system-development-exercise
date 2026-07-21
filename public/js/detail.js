@@ -10,11 +10,8 @@ const plusBtn =
 const minusBtn =
   document.getElementById("minusBtn");
 
-const tareBtn =
-  document.getElementById("tareBtn");
-
-const shioBtn =
-  document.getElementById("shioBtn");
+const optionButtons = document.querySelectorAll(".option-btn");
+let selectedOption = "";
 
 const orderBtn =
   document.getElementById("orderBtn");
@@ -32,32 +29,29 @@ function enableCounter(){
 
   orderBtn.disabled = false;
 
-  tareBtn.classList.remove("selected");
-
-  shioBtn.classList.remove("selected");
-
 }
 
+optionButtons.forEach(button => {
 
-// タレ
-tareBtn.addEventListener("click", () => {
+    button.addEventListener("click", () => {
 
-  enableCounter();
+        optionButtons.forEach(btn =>
+            btn.classList.remove("selected")
+        );
 
-  tareBtn.classList.add("selected");
+        button.classList.add("selected");
+
+        selectedOption = button.textContent.trim();
+
+        count = 1;
+        countText.textContent = count;
+
+        plusBtn.disabled = false;
+        minusBtn.disabled = true;
+        orderBtn.disabled = false;
+    });
 
 });
-
-
-// 塩
-shioBtn.addEventListener("click", () => {
-
-  enableCounter();
-
-  shioBtn.classList.add("selected");
-
-});
-
 
 // ＋
 plusBtn.addEventListener("click", () => {
@@ -104,15 +98,15 @@ minusBtn.addEventListener("click", () => {
 // 注文確認
 orderBtn.addEventListener("click", () => {
 
-  if(count > 0){
+    // オプションがある商品なのに選択していない場合
+    if (optionButtons.length > 0 && selectedOption === "") {
+        alert("オプションを選択してください");
+        return;
+    }
 
-    window.location.href =
-      "add.html";
+    document.getElementById("optionInput").value = selectedOption;
+    document.getElementById("quantityInput").value = count;
 
-  }else{
-
-    alert("数量を選択してください");
-
-  }
+    document.querySelector("form").submit();
 
 });

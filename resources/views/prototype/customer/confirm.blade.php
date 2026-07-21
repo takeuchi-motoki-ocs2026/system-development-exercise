@@ -31,9 +31,14 @@
         <button>いいえ</button>
       </a>
 
-      <a href="{{ url('/prototype/complete') }}">
-        <button>はい</button>
-      </a>
+      <form action="{{ url('/prototype/confirm') }}" method="POST">
+          @csrf
+
+          <button type="submit">
+              はい
+          </button>
+
+      </form>
 
     </div>
 

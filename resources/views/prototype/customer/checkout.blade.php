@@ -21,7 +21,18 @@
       よろしいですか？
     </div>
 
-    <div class="checkout-total">合計　1,250円</div>
+    @php
+    $total = 0;
+
+    foreach($orders as $order){
+        $total += $order->price * $order->quantity;
+    }
+    @endphp
+
+
+    <div class="checkout-total">
+        合計　{{ $total }}円
+    </div>
 
     <div class="confirm-buttons">
       <button onclick="history.back()">いいえ</button>

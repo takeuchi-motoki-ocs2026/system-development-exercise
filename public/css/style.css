@@ -349,13 +349,13 @@ footer > button:hover {
 .history-page{
   min-height:100vh;
   padding-top:70px;
-  padding-bottom:100px;
+  padding-bottom:200px;
 }
 
 .cart-page{
   min-height:100vh;
   padding-top:70px;
-  padding-bottom:100px;
+  padding-bottom:300px;
 }
 
 .history-title{
@@ -412,8 +412,8 @@ footer > button:hover {
 }
 
 .qty-btn{
-  width:38px;
-  height:38px;
+  width:35px;
+  height:35px;
   border:none;
   border-radius:50%;
   background:#ff8f66;
@@ -539,6 +539,12 @@ footer > button:hover {
   display:flex;
   justify-content:center;
   align-items:center;
+}
+
+.item-count-control form{
+  display:flex;
+  align-items:center;
+  gap:8px;
 }
 
 

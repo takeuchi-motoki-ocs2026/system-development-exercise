@@ -16,22 +16,26 @@
 
   <nav class="tabs">
 
-    <button class="tab active" onclick="showMenu('food', event)">
-      料理
-    </button>
+      <button class="tab {{ $category == 'food' ? 'active' : '' }}"
+          onclick="location.href='{{ url('/prototype/orderHome') }}?category=food'">
+          料理
+      </button>
 
-    <button class="tab" onclick="showMenu('drink', event)">
-      ドリンク
-    </button>
+      <button class="tab {{ $category == 'drink' ? 'active' : '' }}"
+          onclick="location.href='{{ url('/prototype/orderHome') }}?category=drink'">
+          ドリンク
+      </button>
 
-    <button class="tab" onclick="showMenu('service', event)">
-      サービス
-    </button>
+      <button class="tab {{ $category == 'service' ? 'active' : '' }}"
+          onclick="location.href='{{ url('/prototype/orderHome') }}?category=service'">
+          サービス
+      </button>
 
-    <button class="tab" onclick="showMenu('limited', event)">
-      店舗限定
-    </button>
-    
+      <button class="tab {{ $category == 'limited' ? 'active' : '' }}"
+          onclick="location.href='{{ url('/prototype/orderHome') }}?category=limited'">
+          店舗限定
+      </button>
+
   </nav>
 
   <main id="menu-list">
@@ -50,10 +54,16 @@
 
       @else
         <a href="{{ url('/prototype/detail/'.$product->id) }}" class="item">
+
           <div class="item-text">
             <h2>{{ $product->name }}</h2>
-              <p>{{ $product->price }}円</p>
+            <p>{{ $product->price }}円</p>
           </div>
+
+          <div class="item-image">
+            <img src="{{ asset('storage/' . $product->image) }}">
+          </div>
+
         </a>
 
       @endif

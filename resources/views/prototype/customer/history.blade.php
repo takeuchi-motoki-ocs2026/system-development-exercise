@@ -30,54 +30,60 @@
   </h1>
 
   <!-- 注文一覧 -->
-  <div class="history-list">
+  @if(count($orders) > 0)
 
-    <!-- 商品 -->
-    <div class="history-item">
+  @foreach($orders as $order)
 
-      <div class="history-info">
+  <div class="history-item">
 
-        <p class="item-name">
-          ねぎま（塩）
-        </p>
+    <div class="history-info">
 
-        <p class="item-price">
-          150円
-        </p>
+      <p class="item-name">
 
-      </div>
+        {{ $order->name }}
 
-      <div class="item-count">
-        1
-      </div>
+        @if(!empty($order->taste))
+          （{{ $order->taste }}）
+        @endif
+
+      </p>
+
+
+      <p class="item-price">
+        {{ $order->price }}円
+      </p>
 
     </div>
 
-    <!-- 商品 -->
-    <div class="history-item">
 
-      <div class="history-info">
-
-        <p class="item-name">
-          生ビール
-        </p>
-
-        <p class="item-price">
-          0円
-        </p>
-
-      </div>
-
-      <div class="item-count">
-        2
-      </div>
-
+    <div class="item-count">
+      {{ $order->quantity }}
     </div>
 
   </div>
 
+  @endforeach
+
+
+  @else
+
+  <div class="empty-cart-message">
+    注文履歴はありません
+  </div>
+
+  @endif
+
+  @php
+  $total = 0;
+
+  foreach($orders as $order){
+      $total += $order->price * $order->quantity;
+  }
+  @endphp
+
+
   <div class="total-area">
-    合計　150円
+    合計　{{ $total }}円
   </div>
 
   <!-- フッター -->

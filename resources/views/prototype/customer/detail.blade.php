@@ -35,7 +35,10 @@
 
   </nav>
 
-  <img class="detail-image" src="{{ asset($product['image']) }}" alt="{{ $product['alt'] }}">
+  <img 
+    class="detail-image" 
+    src="{{ asset('storage/' . $product->image) }}"
+    alt="{{ $product->name }}">
 
   <div class="detail-info">
 
@@ -45,12 +48,24 @@
 
   </div>
 
-  @if($product['hasFlavor'])
-    <div class="flavor">
-      @foreach($product['flavors'] as $index => $flavor)
-        <button class="flavor-btn" id="flavorBtn{{ $index }}">{{ $flavor }}</button>
+  @if($product->has_option)
+
+  <div class="flavor">
+
+      @foreach($product->options as $option)
+
+          <button
+              type="button"
+              class="option-btn">
+
+              {{ $option->option_name }}
+
+          </button>
+
       @endforeach
-    </div>
+
+  </div>
+
   @endif
 
   <div class="counter">
@@ -63,15 +78,24 @@
 
   </div>
 
-  <div class="actions">
+  <form action="/prototype/cart/add/{{ $product->id }}" method="POST">
+      @csrf
 
-    <a href="{{ url('/prototype/orderHome') }}">
-      <button class="back">戻る</button>
-    </a>
+      <div class="actions">
 
-    <button class="add" id="orderBtn" disabled>注文カゴに追加🛒</button>
+          <input type="hidden" name="option" id="optionInput">
+          <input type="hidden" name="quantity" id="quantityInput" value="1">
 
-  </div>
+          <a href="{{ url('/prototype/orderHome') }}">
+              <button type="button" class="back">戻る</button>
+          </a>
+
+          <button type="button" class="add" id="orderBtn" disabled>
+              注文カゴに追加🛒
+          </button>
+
+      </div>
+  </form>
 
   <footer>
 
@@ -99,83 +123,123 @@
 
 </div>
 
-<script>
-  let count = 1;
-
-  const countText = document.getElementById('count');
-  const plusBtn = document.getElementById('plusBtn');
-  const minusBtn = document.getElementById('minusBtn');
-  const orderBtn = document.getElementById('orderBtn');
-  const hasFlavor = {{ $product['hasFlavor'] ? 'true' : 'false' }};
-  const flavorButtons = Array.from(document.querySelectorAll('.flavor-btn'));
-
-  function resetFlavorSelection() {
-    flavorButtons.forEach((button) => button.classList.remove('selected'));
-  }
-
-  function enableCounter() {
-    count = 1;
-    countText.textContent = count;
-    plusBtn.disabled = false;
-    minusBtn.disabled = true;
-    orderBtn.disabled = false;
-    if (hasFlavor) {
-      resetFlavorSelection();
-    }
-  }
-
-  if (hasFlavor) {
-    flavorButtons.forEach((button) => {
-      button.addEventListener('click', () => {
-        enableCounter();
-        resetFlavorSelection();
-        button.classList.add('selected');
-      });
-    });
-  } else {
-    enableCounter();
-  }
-
-  plusBtn.addEventListener('click', () => {
-    if (count < 4) {
-      count++;
-      countText.textContent = count;
-
-      if (count >= 4) {
-        plusBtn.disabled = true;
-      }
-
-      if (count > 1) {
-        minusBtn.disabled = false;
-      }
-    }
-  });
-
-  minusBtn.addEventListener('click', () => {
-    if (count > 1) {
-      count--;
-      countText.textContent = count;
-
-      if (count <= 1) {
-        minusBtn.disabled = true;
-      }
-
-      if (count < 4) {
-        plusBtn.disabled = false;
-      }
-    }
-  });
-
-  orderBtn.addEventListener('click', () => {
-    if (count > 0) {
-      window.location.href = '{{ url('/prototype/add') }}';
-    } else {
-      alert('数量を選択してください');
-    }
-  });
-</script>
-
 @include('prototype.partials.call-confirm')
+
+<script>
+let count = 1;
+
+const countText =
+  document.getElementById("count");
+
+const plusBtn =
+  document.getElementById("plusBtn");
+
+const minusBtn =
+  document.getElementById("minusBtn");
+
+const optionButtons =
+  document.querySelectorAll(".option-btn");
+
+let selectedOption = "";
+
+const orderBtn =
+  document.getElementById("orderBtn");
+
+// オプションなしの商品は最初から注文可能
+if(optionButtons.length === 0){
+
+    orderBtn.disabled = false;
+    plusBtn.disabled = false;
+
+}
+
+
+// オプション選択
+optionButtons.forEach(button => {
+
+    button.addEventListener("click", () => {
+
+        optionButtons.forEach(btn =>
+            btn.classList.remove("selected")
+        );
+
+        button.classList.add("selected");
+
+        selectedOption =
+            button.textContent.trim();
+
+        count = 1;
+        countText.textContent = count;
+
+        plusBtn.disabled = false;
+        minusBtn.disabled = true;
+        orderBtn.disabled = false;
+
+    });
+
+});
+
+
+// ＋
+plusBtn.addEventListener("click", () => {
+
+    if(count < 4){
+
+        count++;
+
+        countText.textContent = count;
+
+        if(count >= 4){
+            plusBtn.disabled = true;
+        }
+
+        if(count > 1){
+            minusBtn.disabled = false;
+        }
+
+    }
+
+});
+
+
+// －
+minusBtn.addEventListener("click", () => {
+
+    if(count > 1){
+
+        count--;
+
+        countText.textContent = count;
+
+        if(count <= 1){
+            minusBtn.disabled = true;
+        }
+
+        if(count < 4){
+            plusBtn.disabled = false;
+        }
+
+    }
+
+});
+
+
+// カート追加
+orderBtn.addEventListener("click", () => {
+
+    document.getElementById("optionInput").value =
+        selectedOption;
+
+
+    document.getElementById("quantityInput").value =
+        count;
+
+
+    document.querySelector("form").submit();
+
+});
+
+</script>
 
 <script src="{{ asset('js/call-confirm.js') }}"></script>
 

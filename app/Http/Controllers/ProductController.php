@@ -288,25 +288,163 @@ class ProductController extends Controller
     ///客用
     public function customerIndex(Request $request)
     {
-        $products = Product::all();
+        $category = $request->query('category', 'food');
+
+        $products = Product::where(
+            'category',
+            $category
+        )->get();
+
         $seat = $request->query('seat');
 
         if ($seat !== null) {
             session(['seat' => $seat]);
         }
 
-        return view('prototype.customer.orderHome', compact('products', 'seat'));
+        return view(
+            'prototype.customer.orderHome',
+            compact('products', 'seat', 'category')
+        );
     }
 
     public function customerDetail($id)
     {
-        $product = Product::findOrFail($id);
+        $product = Product::with('options')->findOrFail($id);
 
         if ($product->stock_status === '無') {
             return redirect('/prototype/orderHome');
         }
 
         return view('prototype.customer.detail', compact('product'));
+    }
+
+    public function customerAdd(Request $request, $id)
+    {
+        $product = Product::findOrFail($id);
+
+        $cart = session()->get('customer_cart', []);
+
+        $key = $id . '_' . $request->option;
+
+
+        if (isset($cart[$key])) {
+
+            $cart[$key]['quantity'] += $request->quantity;
+
+        } else {
+
+            $cart[$key] = [
+                'name' => $product->name,
+                'price' => $product->price,
+                'quantity' => $request->quantity,
+                'option' => $request->option
+            ];
+
+        }
+
+
+        session()->put('customer_cart', $cart);
+
+        return view('prototype.customer.add');
+
+
+    }
+
+    // 客カート数量変更
+    public function customerUpdate(Request $request, $key)
+    {
+        $cart = session()->get('customer_cart', []);
+
+        if(isset($cart[$key])){
+
+            $quantity = $request->quantity;
+
+            if($quantity < 1){
+                $quantity = 1;
+            }
+
+            if($quantity > 4){
+                $quantity = 4;
+            }
+
+            $cart[$key]['quantity'] = $quantity;
+
+        }
+
+        session()->put('customer_cart', $cart);
+
+        return redirect('/prototype/add');
+}
+
+    // 客カート削除
+    public function customerDelete($key)
+    {
+        $cart = session()->get('customer_cart', []);
+
+        if(isset($cart[$key])){
+
+            unset($cart[$key]);
+
+        }
+
+        session()->put('customer_cart', $cart);
+
+        return redirect('/prototype/add');
+    }
+
+    // 客カート全削除
+    public function customerClear()
+    {
+        session()->forget('customer_cart');
+
+        return redirect('/prototype/cart?cleared=1');
+    }
+
+    public function customerConfirm()
+    {
+        $cart = session()->get('customer_cart', []);
+
+        foreach ($cart as $item) {
+
+            Order::create([
+                'name' => $item['name'],
+                'price' => $item['price'],
+                'quantity' => $item['quantity'],
+                'taste' => $item['option'] ?? '',
+                'seat' => session('seat') ?? 1,
+            ]);
+
+        }
+
+        // 客カート削除
+        session()->forget('customer_cart');
+
+        // 完了画面へ
+        return redirect('/prototype/complete');
+    }
+
+    public function customerHistory()
+    {
+        $seat = session('seat') ?? 1;
+
+        $orders = Order::where('seat', $seat)->get();
+
+        return view(
+            'prototype.customer.history',
+            compact('orders')
+        );
+    }
+
+    public function checkout()
+    {
+        $seat = session('seat') ?? 1;
+
+        $orders = Order::where('seat', $seat)->get();
+
+        return view(
+            'prototype.customer.checkout',
+            compact('orders')
+        );
     }
 
     // 空席管理
