@@ -21,13 +21,23 @@ Route::view('/prototype/cart', 'prototype.customer.cart')->name('prototypecart')
 
 Route::view('/prototype/delete', 'prototype.customer.delete')->name('prototypedelete');
 
-Route::view('/prototype/history', 'prototype.customer.history')->name('prototypehistory');
+Route::get('/prototype/history', [ProductController::class, 'customerHistory'])
+    ->name('prototypehistory');
 
 Route::view('/prototype/call', 'prototype.customer.call')->name('prototypecall');
 
-Route::view('/prototype/checkout', 'prototype.customer.checkout')->name('prototypecheckout');
+Route::get(
+    '/prototype/checkout',
+    [ProductController::class, 'checkout']
+)->name('prototypecheckout');
 
-Route::view('/prototype/confirm', 'prototype.customer.confirm')->name('prototypeconfirm');
+Route::get('/prototype/confirm', function () {
+    return view('prototype.customer.confirm');
+})->name('prototypeconfirm');
+
+
+Route::post('/prototype/confirm', [ProductController::class, 'customerConfirm'])
+    ->name('prototype.customer.confirm');
 
 Route::view('/prototype/add', 'prototype.customer.add')->name('prototypeadd');
 
@@ -68,17 +78,6 @@ Route::get('/prototype/staff/qr', function (Request $request) {
     ]);
 })->name('prototype.staff.qr');
 
-Route::post('/prototype/cart/clear', function (Request $request) {
-    $request->session()->forget('cart');
-    return redirect('/prototype/cart?cleared=1');
-})->name('prototype.cart.clear');
-
-Route::post('/prototype/staff/order/cart/clear', function (Request $request) {
-    $request->session()->forget('cart');
-    return redirect()->route('prototype.staff.order.cart', ['cleared' => 1]);
-})->name('prototype.staff.order.cart.clear');
-
-
 
 
 
@@ -96,6 +95,16 @@ Route::get('/prototype/staff/order/cart', [ProductController::class, 'cart'])
 
 // 注文カゴ追加
 Route::post('/cart/add/{id}', [ProductController::class, 'add']);
+Route::post('/prototype/cart/add/{id}', [ProductController::class, 'customerAdd']);
+
+// 客カート数量変更
+Route::post('/prototype/cart/update/{key}', [ProductController::class, 'customerUpdate']);
+
+// 客カート商品削除
+Route::post('/prototype/cart/delete/{key}', [ProductController::class, 'customerDelete']);
+
+// 客カート全削除
+Route::post('/prototype/cart/clear', [ProductController::class, 'customerClear']);
 
 Route::get('/prototype/staff/order/detail/{id}', [ProductController::class, 'detail']);
 

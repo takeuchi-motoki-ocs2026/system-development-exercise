@@ -41,76 +41,97 @@
         カゴの中身はありません
       </div>
     @else
+      @if(count(session('customer_cart', [])) > 0)
 
-    <!-- 商品 -->
-    <div class="history-row">
+      @foreach(session('customer_cart') as $key => $item)
+        <div class="history-row">
 
-      <button class="delete-item-btn">
-        🗑
-      </button>
 
-      <div class="history-item">
+          <form action="{{ url('/prototype/cart/delete/'.$key) }}" method="POST">
+            @csrf
 
-        <div class="history-info">
+            <button type="submit" class="delete-item-btn">
+              🗑
+            </button>
 
-          <p class="item-name">
-            ねぎま（塩）
-          </p>
+          </form>
 
-          <p class="item-price">
-            150円
-          </p>
+          <div class="history-item">
+
+            <div class="history-info">
+
+              <p class="item-name">
+
+                {{ $item['name'] }}
+
+                @if(!empty($item['option']))
+                  （{{ $item['option'] }}）
+                @endif
+
+              </p>
+
+              <p class="item-price">
+                {{ $item['price'] }}円
+              </p>
+
+            </div>
+
+            <div class="item-count-control">
+
+              <form action="{{ url('/prototype/cart/update/'.$key) }}" method="POST">
+              @csrf
+
+                <button
+                type="submit"
+                name="quantity"
+                value="{{ max(1, $item['quantity'] - 1) }}"
+                class="qty-btn minus-btn">
+                  −
+                </button>
+
+                <div class="item-count">
+                  {{ $item['quantity'] }}
+                </div>
+
+                <button
+                type="submit"
+                name="quantity"
+                value="{{ $item['quantity'] + 1 }}"
+                class="qty-btn plus-btn">
+                  +
+                </button>
+
+              </form>
+
+            </div>
+
+          </div>
 
         </div>
+        @endforeach
 
-        <div class="item-count-control">
-          <button class="qty-btn minus-btn">−</button>
-          <div class="item-count">1</div>
-          <button class="qty-btn plus-btn">+</button>
-        </div>
+      @else
 
+      <div class="empty-cart-message">
+        カゴの中身はありません
       </div>
 
-    </div>
-
-    <!-- 商品 -->
-    <div class="history-row">
-
-      <button class="delete-item-btn">
-        🗑
-      </button>
-
-      <div class="history-item">
-
-        <div class="history-info">
-
-          <p class="item-name">
-            生ビール
-          </p>
-
-          <p class="item-price">
-            0円
-          </p>
-
-        </div>
-
-        <div class="item-count-control">
-          <button class="qty-btn minus-btn">−</button>
-          <div class="item-count">2</div>
-          <button class="qty-btn plus-btn">+</button>
-        </div>
-
-      </div>
-
-    </div>
-
+      @endif
     @endif
 
   </div>
 
   <!-- 合計 -->
+  @php
+    $total = 0;
+
+    foreach(session('customer_cart', []) as $item){
+        $total += $item['price'] * $item['quantity'];
+    }
+  @endphp
+
   <div class="total-area">
-    合計　150円
+    合計　{{ $total }}円
   </div>
 
   <!-- ボタン -->
@@ -125,11 +146,14 @@
         注文確定
       </button>
     @else
-      <a href="{{ url('/prototype/delete') }}">
-        <button class="delete-all-btn">
-          全て削除
-        </button>
-      </a>
+      <form action="{{ url('/prototype/cart/clear') }}" method="POST">
+      @csrf
+
+      <button class="delete-all-btn">
+      全て削除
+      </button>
+
+      </form>
 
       <a href="{{ url('/prototype/confirm') }}">
         <button class="confirm-btn">
