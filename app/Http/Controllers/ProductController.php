@@ -7,6 +7,7 @@ use App\Models\Product;
 use App\Models\Order;
 use App\Models\Table;
 use App\Models\ProductOption;
+use App\Models\Call;
 
 class ProductController extends Controller
 {
@@ -85,7 +86,7 @@ class ProductController extends Controller
                 'name' => $product->name,
                 'price' => $product->price,
                 'quantity' => $request->quantity,
-                'taste' => $request->taste
+                'taste' => $request->taste ?? '',
             ];
         }
 
@@ -151,7 +152,7 @@ class ProductController extends Controller
                 'name' => $item['name'],
                 'price' => $item['price'],
                 'quantity' => $item['quantity'],
-                'taste' => $item['taste'],
+                'taste' => $item['taste'] ?? '',
                 'seat' => session('seat') ?? 1,
             ]);
         }
@@ -373,7 +374,7 @@ class ProductController extends Controller
 
         session()->put('customer_cart', $cart);
 
-        return redirect('/prototype/add');
+        return back();
 }
 
     // 客カート削除
@@ -389,7 +390,7 @@ class ProductController extends Controller
 
         session()->put('customer_cart', $cart);
 
-        return redirect('/prototype/add');
+        return back();
     }
 
     // 客カート全削除
@@ -398,6 +399,14 @@ class ProductController extends Controller
         session()->forget('customer_cart');
 
         return redirect('/prototype/cart?cleared=1');
+    }
+
+    public function clearCart()
+    {
+        session()->forget('cart');
+
+        return redirect()
+            ->route('prototype.staff.order.cart');
     }
 
     public function customerConfirm()
@@ -502,9 +511,78 @@ class ProductController extends Controller
     {
         $tables = Table::all();
 
+        $calls = Call::where('status', 'pending')->get();
+
         return view(
             'prototype.staff.seat-management',
-            compact('tables')
+            compact('tables', 'calls')
         );
+    }
+
+    //店員呼出
+    public function callStaff()
+    {
+        $tableId = session('seat');
+
+        if (!$tableId) {
+            return back()->with('error', '座席情報が取得できませんでした');
+        }
+
+        Call::firstOrCreate([
+            'table_id' => $tableId,
+            'request_type' => 'call_staff',
+            'status' => 'pending',
+        ]);
+
+        return redirect()
+            ->route('prototypecall')
+            ->with('success', '店員を呼び出しました');
+    }
+
+    public function processingCall($tableId)
+    {
+        $call = Call::where('table_id', $tableId)
+            ->where('status', 'pending')
+            ->first();
+
+        if ($call) {
+            $call->status = 'processing';
+            $call->save();
+        }
+
+        return back();
+    }
+
+    public function staffHome()
+    {
+        $hasPendingCall = Call::where('status', 'pending')->exists();
+
+        return view(
+            'prototype.staff.home',
+            compact('hasPendingCall')
+        );
+    }
+
+    public function pendingCallCheck()
+    {
+        $pendingCalls = Call::where('status', 'pending')->get();
+
+        return response()->json([
+            'hasPendingCall' => $pendingCalls->isNotEmpty(),
+            'tables' => $pendingCalls->pluck('table_id')
+        ]);
+    }
+
+    public function completeCheckout()
+    {
+        $seat = session('seat');
+
+        if (!$seat) {
+            return back()->with('error', '座席情報が取得できませんでした');
+        }
+
+        Order::where('seat', $seat)->delete();
+
+        return redirect('/prototype/thanks');
     }
 }

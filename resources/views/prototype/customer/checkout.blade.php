@@ -35,8 +35,22 @@
     </div>
 
     <div class="confirm-buttons">
-      <button onclick="history.back()">いいえ</button>
-      <a href="{{ url('/prototype/thanks') }}"><button>はい</button></a>
+
+        <button type="button" onclick="history.back()">
+            いいえ
+        </button>
+
+        <form method="POST"
+              action="{{ route('prototype.checkout.complete') }}">
+
+            @csrf
+
+            <button type="submit">
+                はい
+            </button>
+
+        </form>
+
     </div>
 
   </div>

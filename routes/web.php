@@ -26,6 +26,16 @@ Route::get('/prototype/history', [ProductController::class, 'customerHistory'])
 
 Route::view('/prototype/call', 'prototype.customer.call')->name('prototypecall');
 
+Route::post(
+    '/call/{table}/processing',
+    [ProductController::class, 'processingCall']
+)->name('call.processing');
+
+Route::post(
+    '/prototype/call',
+    [ProductController::class, 'callStaff']
+)->name('prototype.call.store');
+
 Route::get(
     '/prototype/checkout',
     [ProductController::class, 'checkout']
@@ -35,6 +45,10 @@ Route::get('/prototype/confirm', function () {
     return view('prototype.customer.confirm');
 })->name('prototypeconfirm');
 
+Route::post(
+    '/prototype/checkout/complete',
+    [ProductController::class, 'completeCheckout']
+)->name('prototype.checkout.complete');
 
 Route::post('/prototype/confirm', [ProductController::class, 'customerConfirm'])
     ->name('prototype.customer.confirm');
@@ -47,7 +61,10 @@ Route::view('/prototype/thanks', 'prototype.customer.thanks')->name('prototypeth
 
 Route::view('/prototype/login', 'prototype.staff.login')->name('prototypelogin');
 
-Route::view('/prototype/home', 'prototype.staff.home')->name('prototypehome');
+Route::get(
+    '/prototype/home',
+    [ProductController::class, 'staffHome']
+)->name('prototypehome');
 
 Route::view('/prototype/order-menu', 'prototype.staff.order-menu')->name('prototypeorder-menu');
 
@@ -78,6 +95,10 @@ Route::get('/prototype/staff/qr', function (Request $request) {
     ]);
 })->name('prototype.staff.qr');
 
+Route::get(
+    '/prototype/call/pending-check',
+    [ProductController::class, 'pendingCallCheck']
+)->name('prototype.call.pending-check');
 
 
 
@@ -105,6 +126,11 @@ Route::post('/prototype/cart/delete/{key}', [ProductController::class, 'customer
 
 // 客カート全削除
 Route::post('/prototype/cart/clear', [ProductController::class, 'customerClear']);
+
+Route::post(
+    '/prototype/staff/order/cart/clear',
+    [ProductController::class, 'clearCart']
+)->name('prototype.staff.order.cart.clear');
 
 Route::get('/prototype/staff/order/detail/{id}', [ProductController::class, 'detail']);
 
