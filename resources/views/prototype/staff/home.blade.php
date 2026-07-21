@@ -60,6 +60,26 @@ h2 {
     background-color: red;
     color: white;
 }
+
+.seat-menu-btn{
+    position: relative;
+    text-decoration: none;
+    color: black;
+}
+
+.home-call-dot{
+    position: absolute;
+
+    top: 8px;
+    right: 8px;
+
+    width: 14px;
+    height: 14px;
+
+    background: red;
+    border-radius: 50%;
+}
+
 </style>
 </head>
 
@@ -74,9 +94,15 @@ h2 {
         注文状況
     </div>
 
-    <div class="menu-btn" onclick="location.href='{{ route('prototypeseat-management') }}'">
+    <a href="/prototype/seat-management" class="menu-btn seat-menu-btn">
+
         座席管理
-    </div>
+
+        @if($hasPendingCall)
+            <span class="home-call-dot"></span>
+        @endif
+
+    </a>
 
     <div class="menu-btn" onclick="location.href='{{ route('prototype.staff.vacancy') }}'">
         入店案内
@@ -96,6 +122,46 @@ h2 {
 </div>
 
 <div class="footer"></div>
+
+<script>
+function checkPendingCall() {
+    fetch("{{ route('prototype.call.pending-check') }}")
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('通知の取得に失敗しました');
+            }
+
+            return response.json();
+        })
+        .then(data => {
+            const button = document.querySelector('.seat-menu-btn');
+            let dot = button.querySelector('.home-call-dot');
+
+            if (data.hasPendingCall) {
+
+                if (!dot) {
+                    dot = document.createElement('span');
+                    dot.classList.add('home-call-dot');
+                    button.appendChild(dot);
+                }
+
+            } else {
+
+                if (dot) {
+                    dot.remove();
+                }
+
+            }
+        })
+        .catch(error => {
+            console.error(error);
+        });
+}
+
+checkPendingCall();
+
+setInterval(checkPendingCall, 5000);
+</script>
 
 </body>
 </html>

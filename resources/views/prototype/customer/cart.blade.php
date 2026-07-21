@@ -1,5 +1,6 @@
 @php
-  $cartEmpty = request('cleared') == 1;
+    $cart = session('customer_cart', []);
+    $cartEmpty = request('cleared') == 1 || count($cart) === 0;
 @endphp
 
 <!DOCTYPE html>

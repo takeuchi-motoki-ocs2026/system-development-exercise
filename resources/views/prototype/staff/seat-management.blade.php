@@ -114,6 +114,27 @@ tbody tr {
     color: #666;
 }
 
+.status-cell {
+    position: relative;
+    padding: 0;
+}
+
+.call-dot {
+    position: absolute;
+    top: 3px;
+    right: 3px;
+
+    width: 12px;
+    height: 12px;
+
+    background-color: red;
+    border-radius: 50%;
+
+    font-size: 0;
+    z-index: 10;
+    pointer-events: none;
+}
+
 /* ===== 戻るボタン ===== */
 
 .back-btn {
@@ -249,6 +270,10 @@ tbody tr {
 
     @foreach($tables as $table)
 
+    @php
+        $hasCall = $calls->contains('table_id', $table->table_id);
+    @endphp
+
     <tr data-id="{{ $table->table_id }}">
 
         <td>{{ $table->table_number }}</td>
@@ -263,17 +288,21 @@ tbody tr {
 
         </td>
 
-        <td>
+        <td class="status-cell">
+
+            @if($hasCall)
+                <span class="call-dot">●</span>
+            @endif
 
             <select
                 class="status-select"
+                onchange="updateCallStatus(this)"
                 {{ $table->seat_status === 'available' ? 'disabled' : '' }}>
 
                 <option></option>
-                <option>対応中</option>
-                <option>会計待ち</option>
-                <option>掃除</option>
-
+                <option value="processing">対応中</option>
+                <option value="payment">会計待ち</option>
+                <option value="cleaning">掃除</option>
             </select>
 
         </td>
@@ -405,6 +434,84 @@ function changeToEmpty(){
 
     closeModal();
 }
+function updateCallStatus(select){
+
+    if(select.value !== "processing"){
+        return;
+    }
+
+    const row = select.closest("tr");
+    const tableId = row.dataset.id;
+
+    fetch("/call/" + tableId + "/processing", {
+        method: "POST",
+        headers: {
+            "X-CSRF-TOKEN": "{{ csrf_token() }}",
+            "Accept": "application/json"
+        }
+    })
+    .then(response => {
+        if(!response.ok){
+            throw new Error("更新に失敗しました");
+        }
+
+        const dot = row.querySelector(".call-dot");
+
+        if(dot){
+            dot.remove();
+        }
+    })
+    .catch(error => {
+        alert(error.message);
+    });
+}
+
+function checkPendingCalls(){
+
+    fetch("{{ route('prototype.call.pending-check') }}")
+        .then(response => {
+            if(!response.ok){
+                throw new Error("通知の取得に失敗しました");
+            }
+
+            return response.json();
+        })
+        .then(data => {
+
+            const pendingTables = data.tables.map(Number);
+
+            document.querySelectorAll("tbody tr").forEach(row => {
+
+                const tableId = Number(row.dataset.id);
+                const statusCell = row.querySelector(".status-cell");
+                const currentDot = statusCell.querySelector(".call-dot");
+
+                if(pendingTables.includes(tableId)){
+
+                    if(!currentDot){
+                        const dot = document.createElement("span");
+                        dot.classList.add("call-dot");
+                        dot.textContent = "●";
+
+                        statusCell.appendChild(dot);
+                    }
+
+                }else{
+
+                    if(currentDot){
+                        currentDot.remove();
+                    }
+                }
+            });
+        })
+        .catch(error => {
+            console.error(error);
+        });
+}
+
+checkPendingCalls();
+
+setInterval(checkPendingCalls, 5000);
 
 </script>
 

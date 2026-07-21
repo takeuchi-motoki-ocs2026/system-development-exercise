@@ -33,7 +33,11 @@
 
   </nav>
 
-  <img class="detail-image" src="/images/negima.jpg" alt="ねぎま">
+  <img
+    class="detail-image"
+    src="{{ asset('storage/' . $product->image) }}"
+    alt="{{ $product->name }}"
+  >
 
   <div class="detail-info">
 
@@ -85,7 +89,9 @@
         <button type="button" class="back">戻る</button>
       </a>
 
-      <button type="button" class="add" id="orderBtn">カートに追加</button>
+      <button type="button" class="add" id="orderBtn" disabled>
+          注文カゴに追加🛒
+      </button>
 
     </div>
 
@@ -139,6 +145,7 @@
   const plusBtn = document.getElementById('plusBtn');
   const minusBtn = document.getElementById('minusBtn');
   const orderBtn = document.getElementById('orderBtn');
+
   if (optionButtons.length === 0) {
 
     plusBtn.disabled = false;
@@ -159,11 +166,11 @@
   }
 
   plusBtn.addEventListener('click', () => {
-    if (count < 5) {
+    if (count < 4) {
       count++;
       countText.textContent = count;
 
-      if (count >= 5) {
+      if (count >= 4) {
         plusBtn.disabled = true;
       }
 

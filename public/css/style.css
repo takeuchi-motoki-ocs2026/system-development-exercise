@@ -653,6 +653,21 @@ footer > button:hover {
   gap:12px;
   justify-content:center;
 }
+
+.cc-actions > button,
+.cc-actions > form{
+  flex:1;
+}
+
+.cc-actions form{
+  display:flex;
+  margin:0;
+}
+
+.cc-actions form .cc-btn{
+  width:100%;
+}
+
 .cc-btn{
   flex:1;
   padding:10px 14px;
