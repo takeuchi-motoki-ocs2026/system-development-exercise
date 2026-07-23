@@ -301,23 +301,23 @@ App\Http\Controllersフォルダで処理追加
 
 # プロトタイプの作成方法
 1. 作成済みのhtmlファイルを用意
-2. resources/views/prototypeフォルダの中に貼り付け
+2. resources/views/projectフォルダの中に貼り付け
 3. 拡張子を`.html`から`.blade.php`に変更
 4. routes/web.phpファイルに以下を追加
 ```
-Route::view('/prototype/{ファイル名}', 'prototype.{ファイル名}')->name('{ファイル名}');
+Route::view('/project/{ファイル名}', 'project.{ファイル名}')->name('{ファイル名}');
 ```
-5. 起動後http://127.0.0.1:8000/prototype/{ファイル名}を確認
+5. 起動後http://127.0.0.1:8000/project/{ファイル名}を確認
 6. ファイル内のURLを調整
 
 ## CSS,Javascriptの適用方法
 CSSとJavascriptは `public` フォルダに置いて配信します。
 1. CSSファイルとJavascriptファイルを用意する
 2. CSSファイルは `public/css` フォルダに、Javascriptファイルは `public/js` フォルダに入れる
-3. `resources/views/prototype` フォルダのBladeファイルで以下のように読み込む
+3. `resources/views/project` フォルダのBladeファイルで以下のように読み込む
 ```
 <link rel="stylesheet" href="{{ asset('css/style.css') }}">
 <script src="{{ asset('js/app.js') }}" defer></script>
 ```
 4. ファイル内のURLや画像パスを必要に応じて調整する
-5. 起動後 http://127.0.0.1:8000/prototype/{ファイル名} を確認する
+5. 起動後 http://127.0.0.1:8000/project/{ファイル名} を確認する
