@@ -31,12 +31,24 @@
     @foreach ($cart as $id => $item)
 
     <div class="history-row">
+      
+      <form action="/cart/delete/{{ $id }}" method="POST">
+        @csrf
+        <button type="submit" class="delete-item-btn">🗑</button>
+      </form>
+
 
       <div class="history-item">
 
         <div class="history-info">
 
           <p class="item-name">
+            {{ $item['name'] }}
+
+            @if(!empty($item['taste']))
+                （{{ $item['taste'] }}）
+            @endif
+
             {{ $item['name'] }}（{{ $item['taste'] }}）
           </p>
 
@@ -67,6 +79,7 @@
         </div>
 
       </div>
+
 
       <form action="/cart/delete/{{ $id }}" method="POST">
         @csrf

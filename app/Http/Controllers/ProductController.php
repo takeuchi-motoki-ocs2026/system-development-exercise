@@ -79,14 +79,16 @@ class ProductController extends Controller
 
         $cart = session()->get('cart', []);
 
-        if (isset($cart[$id])) {
-            $cart[$id]['quantity'] += $request->quantity;
+        $key = $id . '_' . ($request->option ?? '');
+
+        if (isset($cart[$key])) {
+            $cart[$key]['quantity'] += $request->quantity;
         } else {
-            $cart[$id] = [
+            $cart[$key] = [
                 'name' => $product->name,
                 'price' => $product->price,
                 'quantity' => $request->quantity,
-                'taste' => $request->taste ?? '',
+                'taste' => $request->option ?? '',
             ];
         }
 
