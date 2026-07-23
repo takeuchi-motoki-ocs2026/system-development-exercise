@@ -43,7 +43,13 @@
 
     <h2>{{ $product->name }}</h2>
 
-    <p>{{ $product->price }}円</p>
+    <p>
+    @if(isset($course) && $course === 'all_you_can_drink' && $product->category === 'drink')
+        0円
+    @else
+        {{ $product->price }}円
+    @endif
+    </p>
 
   </div>
 

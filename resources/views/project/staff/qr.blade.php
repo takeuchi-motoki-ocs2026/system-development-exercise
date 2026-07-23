@@ -68,9 +68,16 @@ h2{
 }
 
 .seat-label{
-    text-align:center;
-    font-size:32px;
-    margin-top:40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    margin-top: 40px;
+
+    font-size: 40px;
+    font-weight: bold;
+
+    text-align: center;
 }
 
 .back-btn{
@@ -96,16 +103,26 @@ h2{
 
     <div class="qr-box">
 
-        @php
-        $url = url('/project/orderHome')
-            . '?seat=' . $seat
-        @endphp
+        @if($token)
 
-        {!! QrCode::size(200)->generate($url) !!}
+            @php
+                $url = url('/project/entry')
+                    . '?token=' . urlencode($token);
+            @endphp
+
+            {!! QrCode::size(200)->generate($url) !!}
+
+        @else
+
+            <p>QRコードを発行できませんでした。</p>
+
+        @endif
 
     </div>
 
-    <div id="seatLabel" class="seat-label"></div>
+    <div class="seat-label">
+        {{ $seat }}席
+    </div>
 
     <button
         class="back-btn"
@@ -125,17 +142,6 @@ h2{
     </button>
 
 </div>
-
-<script>
-
-const params = new URLSearchParams(location.search);
-
-const seatNo = params.get("seat");
-
-document.getElementById("seatLabel").textContent =
-    seatNo + "席";
-
-</script>
 
 </body>
 </html>

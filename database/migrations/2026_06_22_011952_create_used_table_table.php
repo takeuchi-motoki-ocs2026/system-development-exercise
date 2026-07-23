@@ -1,5 +1,7 @@
 <?php
-//利用テーブル
+
+// 利用テーブル
+
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -12,24 +14,47 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('used_table', function (Blueprint $table) {
-            $table->id('used_table_id'); // 主キー（自動採番）
+            // 主キー
+            $table->id('used_table_id');
 
-            $table->unsignedBigInteger('table_id'); // テーブルID（外部キー）
-            $table->unsignedBigInteger('customer_id'); // 顧客ID（外部キー）
+            // 外部キー
+            $table->unsignedBigInteger('table_id');
+            $table->unsignedBigInteger('customer_id');
 
-            $table->dateTime('start_time'); // 利用開始日時
-            $table->dateTime('end_time')->nullable(); // 利用終了日時（まだ退店していない場合はNULL）
+            // 今回の利用人数
+            $table->unsignedInteger('people_count');
+
+            // 今回選択したコース
+            $table->enum('course', [
+                'normal',
+                'all_you_can_drink',
+            ])->default('normal');
+
+            // 利用開始・終了日時
+            $table->dateTime('start_time');
+            $table->dateTime('end_time')->nullable();
 
             $table->timestamps();
 
-            // 外部キー制約
-            $table->foreign('table_id')//外部キー名　
-                ->references('table_id')//参照先の主キー
-                ->on('table');//参照先のテーブル名
+            // tableテーブルと紐付け
+            $table->foreign('table_id')
+                ->references('table_id')
+                ->on('table')
+                ->cascadeOnDelete();
 
-            $table->foreign('customer_id')//外部キー名　
-                ->references('customer_id')//参照先の主キー
-                ->on('customer');//参照先のテーブル名
+            // customerテーブルと紐付け
+            $table->foreign('customer_id')
+                ->references('customer_id')
+                ->on('customer')
+                ->cascadeOnDelete();
         });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('used_table');
     }
 };

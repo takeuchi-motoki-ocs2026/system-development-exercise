@@ -17,22 +17,22 @@
   <nav class="tabs">
 
       <button class="tab {{ $category == 'food' ? 'active' : '' }}"
-          onclick="location.href='{{ url('/project/orderHome') }}?category=food'">
+          onclick="location.href='{{ url('/project/orderHome') }}?category=food&seat={{ session('seat') }}'">
           料理
       </button>
 
       <button class="tab {{ $category == 'drink' ? 'active' : '' }}"
-          onclick="location.href='{{ url('/project/orderHome') }}?category=drink'">
+          onclick="location.href='{{ url('/project/orderHome') }}?category=drink&seat={{ session('seat') }}'">
           ドリンク
       </button>
 
       <button class="tab {{ $category == 'service' ? 'active' : '' }}"
-          onclick="location.href='{{ url('/project/orderHome') }}?category=service'">
+          onclick="location.href='{{ url('/project/orderHome') }}?category=service&seat={{ session('seat') }}'">
           サービス
       </button>
 
       <button class="tab {{ $category == 'limited' ? 'active' : '' }}"
-          onclick="location.href='{{ url('/project/orderHome') }}?category=limited'">
+          onclick="location.href='{{ url('/project/orderHome') }}?category=limited&seat={{ session('seat') }}'">
           店舗限定
       </button>
 
@@ -42,31 +42,55 @@
 
   @foreach($products as $product)
 
-    @if($product->stock_status === '無')
-      <div class="item">
-        <div class="item-text">
-          <h2>{{ $product->name }}</h2>
-            <p>{{ $product->price }}円</p>
+    @php
+      $price = $product->price;
 
-              <span class="sold-out-label">品切れ</span>
+      if (
+          isset($course) &&
+          $course === 'all_you_can_drink' &&
+          $product->category === 'drink'
+      ) {
+          $price = 0;
+      }
+    @endphp
+
+    @if($product->stock_status === '無')
+
+      <div class="item">
+
+        <div class="item-text">
+
+          <h2>{{ $product->name }}</h2>
+
+          <p>{{ $price }}円</p>
+
+          <span class="sold-out-label">品切れ</span>
+
         </div>
+
       </div>
 
-      @else
-        <a href="{{ url('/project/detail/'.$product->id) }}" class="item">
+    @else
 
-          <div class="item-text">
-            <h2>{{ $product->name }}</h2>
-            <p>{{ $product->price }}円</p>
-          </div>
+      <a href="{{ url('/project/detail/'.$product->id) }}?seat={{ session('seat') }}" class="item">
 
-          <div class="item-image">
-            <img src="{{ asset('storage/' . $product->image) }}">
-          </div>
+        <div class="item-text">
 
-        </a>
+          <h2>{{ $product->name }}</h2>
 
-      @endif
+          <p>{{ $price }}円</p>
+
+        </div>
+
+        <div class="item-image">
+
+          <img src="{{ asset('storage/' . $product->image) }}">
+
+        </div>
+
+      </a>
+
+    @endif
 
   @endforeach
 
@@ -74,22 +98,32 @@
 
   <footer>
 
-    <button type="button">注文<br>追加</button>
+    <button type="button">
+      注文<br>追加
+    </button>
 
     <a href="{{ url('/project/cart') }}">
-      <button>注文<br>カゴ</button>
+      <button>
+        注文<br>カゴ
+      </button>
     </a>
 
     <a href="{{ url('/project/history') }}">
-      <button>注文<br>履歴</button>
+      <button>
+        注文<br>履歴
+      </button>
     </a>
 
     <a href="{{ url('/project/call') }}">
-      <button>店員<br>呼出</button>
+      <button>
+        店員<br>呼出
+      </button>
     </a>
 
     <a href="{{ url('/project/checkout') }}">
-      <button>会計</button>
+      <button>
+        会計
+      </button>
     </a>
 
   </footer>
@@ -99,7 +133,6 @@
 @include('project.partials.call-confirm')
 
 <script src="{{ asset('js/call-confirm.js') }}"></script>
-<!-- <script src="{{ asset('js/order-home.js') }}"></script> -->
 
 </body>
 </html>
