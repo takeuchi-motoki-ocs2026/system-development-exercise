@@ -3,34 +3,56 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 use App\Models\Product;
 use App\Models\Order;
 use App\Models\Table;
 use App\Models\ProductOption;
 use App\Models\Call;
 
+
 class ProductController extends Controller
 {
     // 一覧表示（orderHome用）
     public function index(Request $request)
     {
-        $category = $request->query('category', 'food');
+        $category = $request->get('category', 'food');
 
-        $products = Product::where(
-            'category',
-            $category
-        )->get();
-
-        $seat = $request->query('seat');
+        $seat = $request->seat ?? session('seat');
 
         if ($seat !== null) {
             session(['seat' => $seat]);
         }
 
-        return view(
-            'project.staff.order.orderHome',
-            compact('products', 'seat', 'category')
-        );
+        $course = 'normal';
+
+        if ($seat !== null) {
+            $visit = DB::table('used_table')
+                ->join(
+                    'table',
+                    'used_table.table_id',
+                    '=',
+                    'table.table_id'
+                )
+                ->where('table.table_number', $seat)
+                ->whereNull('used_table.end_time')
+                ->orderByDesc('used_table.start_time')
+                ->select('used_table.course')
+                ->first();
+
+            if ($visit) {
+                $course = $visit->course;
+            }
+        }
+
+        $products = Product::where('category', $category)->get();
+
+        return view('project.staff.order.orderHome', compact(
+            'products',
+            'category',
+            'course'
+        ));
     }
 
     // 登録処理（menu-add用）
@@ -81,13 +103,38 @@ class ProductController extends Controller
 
         $key = $id . '_' . ($request->option ?? '');
 
+        $seat = session('seat');
+
+        $visit = DB::table('used_table')
+            ->join(
+                'table',
+                'used_table.table_id',
+                '=',
+                'table.table_id'
+            )
+            ->where('table.table_number', $seat)
+            ->whereNull('used_table.end_time')
+            ->select('used_table.course')
+            ->first();
+        
+        $price = $product->price;
+
+        if (
+            $visit &&
+            $visit->course === 'all_you_can_drink' &&
+            $product->category === 'drink'
+        ) {
+            $price = 0;
+        }
+
         if (isset($cart[$key])) {
-            $cart[$key]['quantity'] += $request->quantity;
+            $cart[$key]['quantity'] += (int) $request->quantity;
         } else {
             $cart[$key] = [
+                'product_id' => $product->id,
                 'name' => $product->name,
-                'price' => $product->price,
-                'quantity' => $request->quantity,
+                'price' => $price,
+                'quantity' => (int) $request->quantity,
                 'taste' => $request->option ?? '',
             ];
         }
@@ -96,21 +143,39 @@ class ProductController extends Controller
 
         return redirect('/project/staff/order/home')
             ->with('success', 'カートに追加しました');
-
     }
 
-    public function detail($id)
+    public function detail(Request $request, $id)
     {
         $product = Product::findOrFail($id);
 
-        
-        if ($product->stock_status === '無') {
+        $seat = $request->query('seat', session('seat'));
 
-            return redirect('/project/staff/order/home');
-
+        if ($seat) {
+            session(['seat' => $seat]);
         }
 
-        return view('project.staff.order.detail', compact('product'));
+        $course = 'normal';
+
+        if ($seat) {
+
+            $visit = DB::table('used_table')
+                ->join('table', 'used_table.table_id', '=', 'table.table_id')
+                ->where('table.table_number', $seat)
+                ->whereNull('used_table.end_time')
+                ->latest('used_table.start_time')
+                ->select('used_table.course')
+                ->first();
+
+            if ($visit) {
+                $course = $visit->course;
+            }
+        }
+
+        return view(
+            'project.staff.order.detail',
+            compact('product', 'course')
+        );
     }
 
     public function cart()
@@ -151,10 +216,13 @@ class ProductController extends Controller
 
         foreach ($cart as $item) {
             Order::create([
+                'customer_id' => session('customer_id'),
+                'table_id' => session('table_id'),
+
                 'name' => $item['name'],
                 'price' => $item['price'],
                 'quantity' => $item['quantity'],
-                'taste' => $item['taste'] ?? '',
+                'taste' => $item['option'] ?? '',
                 'seat' => session('seat') ?? 1,
             ]);
         }
@@ -302,15 +370,24 @@ class ProductController extends Controller
 
         if ($seat !== null) {
             session(['seat' => $seat]);
+        } else {
+            $seat = session('seat');
         }
+
+        $course = session('course') ?? 'normal';
 
         return view(
             'project.customer.orderHome',
-            compact('products', 'seat', 'category')
+            compact(
+                'products',
+                'seat',
+                'category',
+                'course'
+            )
         );
     }
 
-    public function customerDetail($id)
+    public function customerDetail(Request $request, $id)
     {
         $product = Product::with('options')->findOrFail($id);
 
@@ -318,7 +395,15 @@ class ProductController extends Controller
             return redirect('/project/orderHome');
         }
 
-        return view('project.customer.detail', compact('product'));
+        $course = session('course') ?? 'normal';
+
+        return view(
+            'project.customer.detail',
+            compact(
+                'product',
+                'course'
+            )
+        );
     }
 
     public function customerAdd(Request $request, $id)
@@ -327,30 +412,35 @@ class ProductController extends Controller
 
         $cart = session()->get('customer_cart', []);
 
-        $key = $id . '_' . $request->option;
+        $key = $id . '_' . ($request->option ?? '');
 
+        $price = $product->price;
+
+        if (
+            session('course') === 'all_you_can_drink' &&
+            $product->category === 'drink'
+        ) {
+            $price = 0;
+        }
 
         if (isset($cart[$key])) {
 
-            $cart[$key]['quantity'] += $request->quantity;
+            $cart[$key]['quantity'] += (int)$request->quantity;
 
         } else {
 
             $cart[$key] = [
                 'name' => $product->name,
-                'price' => $product->price,
-                'quantity' => $request->quantity,
-                'option' => $request->option
+                'price' => $price,
+                'quantity' => (int)$request->quantity,
+                'option' => $request->option ?? '',
             ];
 
         }
 
-
         session()->put('customer_cart', $cart);
 
         return view('project.customer.add');
-
-
     }
 
     // 客カート数量変更
@@ -418,6 +508,9 @@ class ProductController extends Controller
         foreach ($cart as $item) {
 
             Order::create([
+                'customer_id' => session('customer_id'),
+                'table_id' => session('table_id'),
+
                 'name' => $item['name'],
                 'price' => $item['price'],
                 'quantity' => $item['quantity'],
@@ -456,6 +549,202 @@ class ProductController extends Controller
             'project.customer.checkout',
             compact('orders')
         );
+    }
+
+    public function startVisit(Request $request)
+    {
+        $validated = $request->validate([
+            'table_id' => [
+                'required',
+                'integer',
+                'exists:table,table_id',
+            ],
+
+            'course' => [
+                'required',
+                'in:normal,all_you_can_drink',
+            ],
+
+            'people_count' => [
+                'required',
+                'integer',
+                'min:1',
+            ],
+        ]);
+
+        $tableData = Table::findOrFail($validated['table_id']);
+
+        // 最大人数を超えていないか確認
+        if ($validated['people_count'] > $tableData->max_people) {
+            return response()->json([
+                'message' =>
+                    "この席は最大{$tableData->max_people}人です。",
+            ], 422);
+        }
+
+        // すでに使用中ではないか確認
+        if ($tableData->seat_status !== 'available') {
+            return response()->json([
+                'message' => 'この席はすでに使用中です。',
+            ], 422);
+        }
+
+        try {
+            $result = DB::transaction(function () use (
+                $validated,
+                $tableData
+            ) {
+                // QR識別用の値
+                $qrToken = (string) Str::uuid();
+
+                // customerへ来店情報を登録
+                $customerId = DB::table('customer')
+                    ->insertGetId([
+                        'payment_time' => null,
+                        'billStatus' => 'unpaid',
+                        'qr_code' => $qrToken,
+                        'created_at' => now(),
+                        'updated_at' => now(),
+                    ]);
+
+                // used_tableへ今回の利用情報を登録
+                DB::table('used_table')->insert([
+                    'table_id' => $validated['table_id'],
+                    'customer_id' => $customerId,
+                    'people_count' => $validated['people_count'],
+                    'course' => $validated['course'],
+                    'start_time' => now(),
+                    'end_time' => null,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+
+                // 席を使用中にする
+                $tableData->seat_status = 'occupied';
+                $tableData->save();
+
+                return [
+                    'qr_token' => $qrToken,
+                ];
+            });
+
+            return response()->json([
+                'success' => true,
+
+                'redirect_url' =>
+                    url('/project/staff/qr')
+                    . '?token='
+                    . urlencode($result['qr_token']),
+            ]);
+
+        } catch (\Throwable $e) {
+            report($e);
+
+            return response()->json([
+                'message' => '入店登録に失敗しました。',
+            ], 500);
+        }
+    }
+
+    public function enterByQr(Request $request)
+    {
+        $token = $request->query('token');
+
+        if (!$token) {
+            return redirect('/project')
+                ->with('error', 'QRコードが正しくありません。');
+        }
+
+        $customer = DB::table('customer')
+            ->where('qr_code', $token)
+            ->first();
+
+        if (!$customer) {
+            return redirect('/project')
+                ->with('error', '無効なQRコードです。');
+        }
+
+        if ($customer->billStatus === 'paid') {
+            return redirect('/project')
+                ->with('error', 'このQRコードは利用終了しています。');
+        }
+
+        $usedTable = DB::table('used_table')
+            ->join(
+                'table',
+                'used_table.table_id',
+                '=',
+                'table.table_id'
+            )
+            ->where('used_table.customer_id', $customer->customer_id)
+            ->whereNull('used_table.end_time')
+            ->select(
+                'used_table.*',
+                'table.table_number'
+            )
+            ->first();
+
+        if (!$usedTable) {
+            return redirect('/project')
+                ->with('error', '利用中の席情報がありません。');
+        }
+
+        session([
+            'customer_id' => $customer->customer_id,
+            'table_id' => $usedTable->table_id,
+            'seat' => $usedTable->table_number,
+            'course' => $usedTable->course,
+            'people_count' => $usedTable->people_count,
+            'qr_token' => $token,
+        ]);
+        return redirect('/project/orderHome');
+    }
+
+    public function showQr(Request $request)
+    {
+        $token = $request->query('token');
+
+        if (!$token) {
+            return redirect()
+                ->route('project.staff.vacancy')
+                ->with('error', 'QRコード情報がありません。');
+        }
+
+        $visit = DB::table('customer')
+            ->join(
+                'used_table',
+                'customer.customer_id',
+                '=',
+                'used_table.customer_id'
+            )
+            ->join(
+                'table',
+                'used_table.table_id',
+                '=',
+                'table.table_id'
+            )
+            ->where('customer.qr_code', $token)
+            ->whereNull('used_table.end_time')
+            ->select(
+                'customer.qr_code',
+                'table.table_number',
+                'used_table.course',
+                'used_table.people_count'
+            )
+            ->first();
+
+        if (!$visit) {
+            return redirect()
+                ->route('project.staff.vacancy')
+                ->with('error', '利用情報が見つかりません。');
+        }
+
+        return view('project.staff.qr', [
+            'token' => $visit->qr_code,
+            'seat' => $visit->table_number,
+            'course' => $visit->course,
+            'people' => $visit->people_count,
+        ]);
     }
 
     // 空席管理
@@ -587,4 +876,38 @@ class ProductController extends Controller
 
         return redirect('/project/thanks');
     }
+
+    public function staffOrderHome(Request $request)
+    {
+        $category = $request->get('category', 'food');
+
+        $seat = $request->seat ?? session('seat');
+
+        if ($seat !== null) {
+            session(['seat' => $seat]);
+        }
+
+        $visit = DB::table('used_table')
+            ->join(
+                'table',
+                'used_table.table_id',
+                '=',
+                'table.table_id'
+            )
+            ->where('table.table_number', $seat)
+            ->whereNull('used_table.end_time')
+            ->orderByDesc('used_table.start_time')
+            ->select('used_table.course')
+            ->first();
+
+        $course = $visit?->course ?? 'normal';
+
+        $products = Product::where('category', $category)->get();
+
+        return view(
+            'project.staff.order.home',
+            compact('products', 'category', 'course')
+        );
+    }
+
 }

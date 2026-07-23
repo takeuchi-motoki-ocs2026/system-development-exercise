@@ -88,12 +88,15 @@ Route::view('/project/staff/order/history', 'project.staff.order.history')->name
 
 Route::view('/project/staff/order', 'project.staff.order')->name('project.staff.order');
 
-Route::get('/project/staff/qr', function (Request $request) {
-    return view('project.staff.qr', [
-        'seat' => $request->query('seat'),
-        'course' => $request->query('course'),
-    ]);
-})->name('project.staff.qr');
+Route::get(
+    '/project/staff/qr',
+    [ProductController::class, 'showQr']
+)->name('project.staff.qr');
+
+Route::get(
+    '/project/entry',
+    [ProductController::class, 'enterByQr']
+)->name('project.entry');
 
 Route::get(
     '/project/call/pending-check',
@@ -177,8 +180,16 @@ Route::post('/order-status/update/{id}',[ProductController::class, 'updateServed
 Route::post('/order-status/update/{id}',[ProductController::class, 'updateServed']);
 
 // 空席管理
-Route::get('/project/staff/vacancy',[ProductController::class, 'vacancyManagement'])
-    ->name('project.staff.vacancy');
+Route::get(
+    '/project/staff/vacancy',
+    [ProductController::class, 'vacancyManagement']
+)->name('project.staff.vacancy');
+
+// QR発行前の入店登録
+Route::post(
+    '/project/staff/visit',
+    [ProductController::class, 'startVisit']
+)->name('project.staff.visit.store');
 
 // 席状態（空→使）
 Route::post('/seat/use/{id}',[ProductController::class, 'useSeat']);

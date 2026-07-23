@@ -195,7 +195,11 @@ tbody tr {
 
                 <button
                     class="select-btn"
-                    onclick="openCourseModal({{ $table->table_number }})">
+                    onclick="openCourseModal(
+                        {{ $table->table_id }},
+                        {{ $table->table_number }},
+                        {{ $table->max_people }}
+                    )">
 
                     選択
 
@@ -240,20 +244,28 @@ tbody tr {
 
         <h2>コース選択</h2>
 
-        <div class="course-buttons">
+        <p id="selectedSeatText"></p>
 
+        <div class="people-area">
+            <label for="peopleSelect">利用人数</label>
+
+            <select id="peopleSelect">
+                <option value="">人数を選択</option>
+            </select>
+        </div>
+
+        <div class="course-buttons">
             <button
                 class="drink-btn"
-                onclick="selectCourse('飲み放題')">
+                onclick="selectCourse('all_you_can_drink')">
                 飲み放題
             </button>
 
             <button
                 class="normal-btn"
-                onclick="selectCourse('通常')">
+                onclick="selectCourse('normal')">
                 通常
             </button>
-
         </div>
 
         <button
@@ -268,43 +280,101 @@ tbody tr {
 
 <script>
 
+let selectedTableId = null;
 let selectedSeat = null;
+let selectedMaxPeople = null;
 
 /* モーダル表示 */
-function openCourseModal(seatNo) {
-
+function openCourseModal(tableId, seatNo, maxPeople)
+{
+    selectedTableId = tableId;
     selectedSeat = seatNo;
+    selectedMaxPeople = maxPeople;
+
+    document.getElementById("selectedSeatText").textContent =
+        seatNo + "番席（最大" + maxPeople + "人）";
+
+    const peopleSelect =
+        document.getElementById("peopleSelect");
+
+    // 前の席の選択肢を消す
+    peopleSelect.innerHTML =
+        '<option value="">人数を選択</option>';
+
+    // 最大人数まで選択肢を作る
+    for (let i = 1; i <= maxPeople; i++) {
+
+        const option =
+            document.createElement("option");
+
+        option.value = i;
+        option.textContent = i + "人";
+
+        peopleSelect.appendChild(option);
+    }
 
     document.getElementById("courseModal").style.display = "flex";
 }
 
 /* モーダル閉じる */
-function closeCourseModal() {
-
+function closeCourseModal()
+{
     document.getElementById("courseModal").style.display = "none";
+
+    document.getElementById("peopleSelect").value = "";
+
+    selectedTableId = null;
+    selectedSeat = null;
+    selectedMaxPeople = null;
 }
 
 /* コース選択 */
 function selectCourse(course)
 {
-    fetch(
-        "/seat/occupy/" + selectedSeat,
-        {
-            method: "POST",
+    const people =
+        document.getElementById("peopleSelect").value;
 
-            headers: {
-                "X-CSRF-TOKEN":
-                    "{{ csrf_token() }}"
-            }
+    if (!people) {
+        alert("利用人数を選択してください");
+        return;
+    }
+
+    fetch("/project/staff/visit", {
+        method: "POST",
+
+        headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+            "X-CSRF-TOKEN": "{{ csrf_token() }}"
+        },
+
+        body: JSON.stringify({
+            table_id: selectedTableId,
+            course: course,
+            people_count: Number(people)
+        })
+    })
+    .then(async response => {
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(
+                data.message || "入店登録に失敗しました"
+            );
         }
-    )
-    .then(() => {
 
-        location.href =
-            "/project/staff/qr?seat=" +
-            selectedSeat +
-            "&course=" +
-            encodeURIComponent(course);
+        return data;
+    })
+    .then(data => {
+
+        location.href = data.redirect_url;
+
+    })
+    .catch(error => {
+
+        console.error(error);
+        alert(error.message);
 
     });
 }

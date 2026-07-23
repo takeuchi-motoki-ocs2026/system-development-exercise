@@ -597,3 +597,23 @@ button:disabled {
     background: red;
     border-radius: 50%;
 }
+
+.people-area {
+    margin-top: 20px;
+}
+
+.people-area label {
+    display: block;
+    margin-bottom: 10px;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.people-area select {
+    width: 180px;
+    height: 42px;
+    padding: 5px 10px;
+    font-size: 17px;
+    background-color: white;
+    border: 1px solid #666;
+}

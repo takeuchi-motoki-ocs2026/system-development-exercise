@@ -31,12 +31,11 @@
     @foreach ($cart as $id => $item)
 
     <div class="history-row">
-      
+
       <form action="/cart/delete/{{ $id }}" method="POST">
         @csrf
         <button type="submit" class="delete-item-btn">🗑</button>
       </form>
-
 
       <div class="history-item">
 
@@ -46,10 +45,8 @@
             {{ $item['name'] }}
 
             @if(!empty($item['taste']))
-                （{{ $item['taste'] }}）
+              （{{ $item['taste'] }}）
             @endif
-
-            {{ $item['name'] }}（{{ $item['taste'] }}）
           </p>
 
           <p class="item-price">
@@ -59,32 +56,47 @@
         </div>
 
         <div class="item-count-control">
+
           <!-- − -->
           <form action="/cart/update/{{ $id }}" method="POST">
             @csrf
-            <input type="hidden" name="quantity" value="{{ max(1, $item['quantity'] - 1) }}">
-            <button type="submit" class="qty-btn" {{ $item['quantity'] <= 1 ? 'disabled' : '' }}>−</button>
+            <input
+              type="hidden"
+              name="quantity"
+              value="{{ max(1, $item['quantity'] - 1) }}">
+
+            <button
+              type="submit"
+              class="qty-btn"
+              {{ $item['quantity'] <= 1 ? 'disabled' : '' }}>
+              −
+            </button>
           </form>
 
           <!-- 数量 -->
-          <div class="item-count">{{ $item['quantity'] }}</div>
+          <div class="item-count">
+            {{ $item['quantity'] }}
+          </div>
 
           <!-- ＋ -->
           <form action="/cart/update/{{ $id }}" method="POST">
             @csrf
-            <input type="hidden" name="quantity" value="{{ min(5, $item['quantity'] + 1) }}">
-            <button type="submit" class="qty-btn" {{ $item['quantity'] >= 4 ? 'disabled' : '' }}>＋</button>
+            <input
+              type="hidden"
+              name="quantity"
+              value="{{ min(4, $item['quantity'] + 1) }}">
+
+            <button
+              type="submit"
+              class="qty-btn"
+              {{ $item['quantity'] >= 4 ? 'disabled' : '' }}>
+              ＋
+            </button>
           </form>
 
         </div>
 
       </div>
-
-
-      <form action="/cart/delete/{{ $id }}" method="POST">
-        @csrf
-        <button type="submit" class="delete-item-btn">🗑</button>
-      </form>
 
     </div>
 
@@ -94,10 +106,11 @@
 
   <!-- 合計 -->
   @php
-  $total = 0;
-  foreach ($cart as $item) {
-      $total += $item['price'] * $item['quantity'];
-  }
+    $total = 0;
+
+    foreach ($cart as $item) {
+        $total += $item['price'] * $item['quantity'];
+    }
   @endphp
 
   <div class="total-area">
@@ -109,32 +122,45 @@
 
     <form action="{{ route('project.staff.order.cart.clear') }}" method="POST">
       @csrf
-      <button type="submit" class="delete-all-btn" {{ empty($cart) ? 'disabled' : '' }}>
+
+      <button
+        type="submit"
+        class="delete-all-btn"
+        {{ empty($cart) ? 'disabled' : '' }}>
         全て削除
       </button>
+
     </form>
-    
+
     <form action="{{ route('project.staff.order.confirm') }}" method="POST">
       @csrf
-      <button type="submit" class="confirm-btn" {{ empty($cart) ? 'disabled' : '' }}>
+
+      <button
+        type="submit"
+        class="confirm-btn"
+        {{ empty($cart) ? 'disabled' : '' }}>
         注文確定
       </button>
+
     </form>
 
   </div>
 
   <!-- フッター -->
   <footer>
+
     <a href="{{ url('/project/staff/order/home') }}">
       <button>
         注文
       </button>
     </a>
+
     <a href="{{ url('project/home') }}">
       <button>
         ホーム
       </button>
     </a>
+
   </footer>
 
 </div>

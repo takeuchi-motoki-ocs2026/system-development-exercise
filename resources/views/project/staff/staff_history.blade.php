@@ -172,7 +172,10 @@ h2 {
         <div class="history-info">
 
             <p class="item-name">
-                {{ $order->name }}（{{ $order->taste ?? '' }}）
+                {{ $order->name }}
+                @if(!empty($order->taste))
+                    （{{ $order->taste }}）
+                @endif
             </p>
 
             <p class="item-price">

@@ -30,25 +30,25 @@
   <nav class="tabs">
 
     <button class="tab {{ $category == 'food' ? 'active' : '' }}"
-    onclick="location.href='/project/staff/order/home?category=food'">
+    onclick="location.href='/project/staff/order/home?category=food&seat={{ session('seat') }}'">
       料理
     </button>
 
     <button class="tab {{ $category == 'drink' ? 'active' : '' }}"
-    onclick="location.href='/project/staff/order/home?category=drink'">
+    onclick="location.href='/project/staff/order/home?category=drink&seat={{ session('seat') }}'">
       ドリンク
     </button>
 
     <button class="tab {{ $category == 'service' ? 'active' : '' }}"
-    onclick="location.href='/project/staff/order/home?category=service'">
+    onclick="location.href='/project/staff/order/home?category=service&seat={{ session('seat') }}'">
       サービス
     </button>
 
     <button class="tab {{ $category == 'limited' ? 'active' : '' }}"
-    onclick="location.href='/project/staff/order/home?category=limited'">
+    onclick="location.href='/project/staff/order/home?category=limited&seat={{ session('seat') }}'">
       店舗限定
     </button>
-    
+
   </nav>
 
   <main id="menu-list">
@@ -63,7 +63,16 @@
             <div class="item-text">
 
               <h2>{{ $product->name }}</h2>
-              <p>{{ $product->price }}円</p>
+              <p>
+                @if(
+                    $course === 'all_you_can_drink' &&
+                    $product->category === 'drink'
+                )
+                  0円
+                @else
+                  {{ $product->price }}円
+                @endif
+              </p>
 
               <div class="soldout-badge">
 
@@ -83,12 +92,21 @@
 
         @else
 
-          <a href="/project/staff/order/detail/{{ $product->id }}" class="item">
+          <a href="/project/staff/order/detail/{{ $product->id }}?seat={{ session('seat') }}" class="item">
 
             <div class="item-text">
 
               <h2>{{ $product->name }}</h2>
-              <p>{{ $product->price }}円</p>
+              <p>
+                @if(
+                    $course === 'all_you_can_drink' &&
+                    $product->category === 'drink'
+                )
+                  0円
+                @else
+                  {{ $product->price }}円
+                @endif
+              </p>
 
             </div>
 

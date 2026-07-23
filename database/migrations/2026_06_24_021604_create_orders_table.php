@@ -13,12 +13,27 @@ return new class extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
-            $table->string('name');        // 商品名
-            $table->integer('price');      // 価格
-            $table->integer('quantity');   // 数量
-            $table->string('taste');       // 味
-            $table->timestamps();
+
+            // QRで入店した顧客
+            $table->unsignedBigInteger('customer_id');
+
+            // 注文したテーブル
+            $table->unsignedBigInteger('table_id');
+
+            // 商品情報
+            $table->string('name');
+            $table->integer('price');
+            $table->integer('quantity');
+            $table->string('taste');
+
+            // 配膳済み数量
+            $table->integer('served_quantity')
+                  ->default(0);
+
+            // 表示用の席番号
             $table->integer('seat');
+
+            $table->timestamps();
         });
     }
 

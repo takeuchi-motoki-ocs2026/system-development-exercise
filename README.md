@@ -14,29 +14,14 @@
 
 ## 1. 必要ソフトをインストール
 
-### PHP
-
-以下を参考にインストールしてください。
-
+**PHP**  
 https://qiita.com/coconuts-harm/items/8803f6d4f99e7c734582
 
----
-
-### Composer
-
-以下を参考にインストールしてください。
-
+**Composer**  
 https://qiita.com/taiyang-ks/items/0da7effa807111b92c25
 
----
-
-### MySQL
-
-以下を参考にインストールしてください。
-
+**MySQL**  
 https://qiita.com/KOJI-YAMAMOTO/items/02af20e7b5cd27932a27
-
----
 
 ## 2. リポジトリを取得
 
@@ -45,31 +30,18 @@ git clone https://github.com/syun17/system-development-exercise.git
 cd system-development-exercise
 ```
 
----
-
 ## 3. 必要パッケージをインストール
 
 ```bash
 composer install
 ```
 
----
-
 ## 4. QRコードライブラリをインストール
-
-QRコード機能を利用するため、以下のコマンドを実行してください。
 
 ```bash
 composer require simplesoftwareio/simple-qrcode
-```
-
-インストール後、キャッシュを削除してください。
-
-```bash
 php artisan optimize:clear
 ```
-
----
 
 ## 5. 環境変数ファイルを作成
 
@@ -77,11 +49,7 @@ php artisan optimize:clear
 copy .env.example .env
 ```
 
----
-
 ## 6. `.env` を設定
-
-`.env` ファイルを開き、以下を設定してください。
 
 ```env
 DB_CONNECTION=mysql
@@ -94,37 +62,31 @@ DB_PASSWORD=
 
 ※ `DB_PASSWORD` は各自の環境に合わせて変更してください。
 
----
-
 ## 7. MySQLを起動
 
 ```bash
 mysqld --defaults-file="C:\Users\{学籍番号}\mysql\my.ini"
 ```
 
----
-
 ## 8. データベースを作成
 
-MySQLにログインします。
+MySQLへログイン
 
 ```bash
 mysql -u root -p
 ```
 
-データベースを作成します。
+データベース作成
 
 ```sql
 CREATE DATABASE mobile_order;
 ```
 
-終了する場合
+終了
 
 ```sql
 exit
 ```
-
----
 
 ## 9. アプリケーションキーを生成
 
@@ -132,15 +94,11 @@ exit
 php artisan key:generate
 ```
 
----
-
 ## 10. マイグレーションを実行
 
 ```bash
 php artisan migrate
 ```
-
----
 
 ## 11. サーバーを起動
 
@@ -148,9 +106,11 @@ php artisan migrate
 php artisan serve
 ```
 
-起動後、以下へアクセスしてください。
+アクセス
 
+```
 http://127.0.0.1:8000
+```
 
 ---
 
@@ -161,8 +121,6 @@ http://127.0.0.1:8000
 ```bash
 mysqld --defaults-file="C:\Users\{学籍番号}\mysql\my.ini"
 ```
-
----
 
 ## 2. Laravelサーバーを起動
 
@@ -184,40 +142,21 @@ php artisan serve --host=0.0.0.0 --port=80
 
 ## MySQLのPATH設定
 
-### 設定方法
-
-1. スタートメニューで「環境変数」と検索
-2. 「システム環境変数を編集」を開く
-3. 「環境変数」を押す
-4. 「Path」を選択して編集
-
-以下を追加してください。
+環境変数 `Path` に追加
 
 ```txt
 C:\Users\{学籍番号}\mysql\bin
 ```
 
-設定後、新しいコマンドプロンプトで以下を実行します。
+確認
 
 ```bash
 mysql --version
 ```
 
-バージョンが表示されればOKです。
-
----
-
 ## php.ini の設定
 
-`php.ini` を開き、以下を探してください。
-
-```ini
-;extension=fileinfo
-;extension=pdo_mysql
-;extension=mysqli
-```
-
-先頭の `;` を削除してください。
+以下を有効化してください。
 
 ```ini
 extension=fileinfo
@@ -225,44 +164,28 @@ extension=pdo_mysql
 extension=mysqli
 ```
 
-保存後、コマンドプロンプトを再起動してください。
-
----
-
 ## No application encryption key has been specified.
-
-以下を実行してください。
 
 ```bash
 php artisan key:generate
 ```
 
----
-
 ## Class "PDO" not found
-
-`php.ini` の `pdo_mysql` が有効になっているか確認してください。
 
 ```ini
 extension=pdo_mysql
 ```
 
----
+を有効にしてください。
 
 ## Class "QrCode" not found
-
-QRコードライブラリがインストールされているか確認してください。
 
 ```bash
 composer require simplesoftwareio/simple-qrcode
 php artisan optimize:clear
 ```
 
----
-
-## ポートが使用中の場合
-
-以下のようにポート番号を変更してください。
+## ポートが使用中
 
 ```bash
 php artisan serve --port=8080
@@ -270,25 +193,23 @@ php artisan serve --port=8080
 
 アクセス先
 
+```
 http://127.0.0.1:8080
+```
 
----
+## MySQLに接続できない
 
-## MySQLに接続できない場合
-
-以下で接続確認してください。
+接続確認
 
 ```bash
 mysql -u root -p
 ```
 
-接続できない場合は、
+確認項目
 
 - MySQLが起動しているか
-- `.env` のユーザー名・パスワード
+- `.env` の設定
 - ポート番号
-
-を確認してください。
 
 ---
 
@@ -300,8 +221,6 @@ mysql -u root -p
 php artisan config:clear
 php artisan cache:clear
 ```
-
----
 
 ## テーブルを初期化して再作成
 
@@ -315,7 +234,7 @@ php artisan migrate:fresh
 
 - `.env` ファイルはGitにアップロードしないでください。
 - `vendor` フォルダは `composer install` で再生成されます。
-- エラーが出た場合は、エラーメッセージをよく読んでください。
+- エラーが出た場合は、エラーメッセージを確認してください。
 
 ---
 
@@ -324,26 +243,31 @@ php artisan migrate:fresh
 ## MVCアーキテクチャ
 
 - Model：データ関連（データベース）
-- View：表示関連（画面・プロトタイプの実装）
-- Controller：仲介処理
+- View：表示関連（画面）
+- Controller：処理
 
 ### Model
 
-`app/Models`
+```
+app/Models
+```
 
 ### View
 
-`resources/views`
+```
+resources/views
+```
 
 ### Controller
 
-- ルーティング：`routes/web.php`
-- 処理：`app/Http/Controllers`
+```
+routes/web.php
+app/Http/Controllers
+```
 
 ---
 
 # プロトタイプの作成方法
-
 
 1. 作成済みのHTMLファイルを用意する
 2. `resources/views/project` フォルダへ配置する
@@ -354,29 +278,12 @@ php artisan migrate:fresh
 Route::view('/project/{ファイル名}', 'project.{ファイル名}')->name('{ファイル名}');
 ```
 
-5. 起動後、以下へアクセスする
+5. ファイル内のURLを必要に応じて調整する
+6. ブラウザで以下へアクセスして確認する
 
 ```
 http://127.0.0.1:8000/project/{ファイル名}
-
-1. 作成済みのhtmlファイルを用意
-2. resources/views/projectフォルダの中に貼り付け
-3. 拡張子を`.html`から`.blade.php`に変更
-4. routes/web.phpファイルに以下を追加
 ```
-Route::view('/project/{ファイル名}', 'project.{ファイル名}')->name('{ファイル名}');
-```
-5. 起動後http://127.0.0.1:8000/project/{ファイル名}を確認
-6. ファイル内のURLを調整
-
-## CSS,Javascriptの適用方法
-CSSとJavascriptは `public` フォルダに置いて配信します。
-1. CSSファイルとJavascriptファイルを用意する
-2. CSSファイルは `public/css` フォルダに、Javascriptファイルは `public/js` フォルダに入れる
-3. `resources/views/project` フォルダのBladeファイルで以下のように読み込む
-```
-
-6. ファイル内のURLを調整する
 
 ---
 
@@ -384,21 +291,18 @@ CSSとJavascriptは `public` フォルダに置いて配信します。
 
 CSSとJavaScriptは `public` フォルダに配置して配信します。
 
-1. CSSファイルとJavaScriptファイルを用意する
-2. CSSファイルは `public/css`、JavaScriptファイルは `public/js` に配置する
-3. Bladeファイルで以下のように読み込む
+1. CSSファイルを `public/css` に配置する
+2. JavaScriptファイルを `public/js` に配置する
+3. Bladeファイルで読み込む
 
 ```html
 <link rel="stylesheet" href="{{ asset('css/style.css') }}">
 <script src="{{ asset('js/app.js') }}" defer></script>
 ```
 
-4. ファイル内のURLや画像パスを必要に応じて調整する
-
-5. 起動後、以下へアクセスして確認する
+4. 必要に応じてURLや画像パスを調整する
+5. ブラウザで以下へアクセスして確認する
 
 ```
 http://127.0.0.1:8000/project/{ファイル名}
 ```
-
-5. 起動後 http://127.0.0.1:8000/project/{ファイル名} を確認する

@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -17,26 +16,30 @@
 
   <nav class="tabs">
 
-    <button class="tab active" onclick="location.href='{{ url('/project/orderHome') }}?category=food'">
+    <button class="tab {{ $product->category == 'food' ? 'active' : '' }}"
+      onclick="location.href='{{ url('/project/orderHome') }}?category=food&seat={{ session('seat') }}'">
       料理
     </button>
 
-    <button class="tab" onclick="location.href='{{ url('/project/orderHome') }}?category=drink'">
+    <button class="tab {{ $product->category == 'drink' ? 'active' : '' }}"
+      onclick="location.href='{{ url('/project/orderHome') }}?category=drink&seat={{ session('seat') }}'">
       ドリンク
     </button>
 
-    <button class="tab" onclick="location.href='{{ url('/project/orderHome') }}?category=service'">
+    <button class="tab {{ $product->category == 'service' ? 'active' : '' }}"
+      onclick="location.href='{{ url('/project/orderHome') }}?category=service&seat={{ session('seat') }}'">
       サービス
     </button>
 
-    <button class="tab" onclick="location.href='{{ url('/project/orderHome') }}?category=limited'">
+    <button class="tab {{ $product->category == 'limited' ? 'active' : '' }}"
+      onclick="location.href='{{ url('/project/orderHome') }}?category=limited&seat={{ session('seat') }}'">
       店舗限定
     </button>
 
   </nav>
 
-  <img 
-    class="detail-image" 
+  <img
+    class="detail-image"
     src="{{ asset('storage/' . $product->image) }}"
     alt="{{ $product->name }}">
 
@@ -44,7 +47,13 @@
 
     <h2>{{ $product->name }}</h2>
 
-    <p>{{ $product->price }}円</p>
+    <p>
+      @if(isset($course) && $course === 'all_you_can_drink' && $product->category === 'drink')
+        0円
+      @else
+        {{ $product->price }}円
+      @endif
+    </p>
 
   </div>
 
@@ -52,17 +61,17 @@
 
   <div class="flavor">
 
-      @foreach($product->options as $option)
+    @foreach($product->options as $option)
 
-          <button
-              type="button"
-              class="option-btn">
+      <button
+        type="button"
+        class="option-btn">
 
-              {{ $option->option_name }}
+        {{ $option->option_name }}
 
-          </button>
+      </button>
 
-      @endforeach
+    @endforeach
 
   </div>
 
@@ -79,27 +88,28 @@
   </div>
 
   <form action="/project/cart/add/{{ $product->id }}" method="POST">
-      @csrf
+    @csrf
 
-      <div class="actions">
+    <div class="actions">
 
-          <input type="hidden" name="option" id="optionInput">
-          <input type="hidden" name="quantity" id="quantityInput" value="1">
+      <input type="hidden" name="option" id="optionInput">
+      <input type="hidden" name="quantity" id="quantityInput" value="1">
 
-          <a href="{{ url('/project/orderHome') }}">
-              <button type="button" class="back">戻る</button>
-          </a>
+      <a href="{{ url('/project/orderHome') }}?category={{ $product->category }}&seat={{ session('seat') }}">
+        <button type="button" class="back">戻る</button>
+      </a>
 
-          <button type="button" class="add" id="orderBtn" disabled>
-              注文カゴに追加🛒
-          </button>
+      <button type="button" class="add" id="orderBtn" disabled>
+        注文カゴに追加🛒
+      </button>
 
-      </div>
+    </div>
+
   </form>
 
   <footer>
 
-    <a href="{{ url('/project/orderHome') }}">
+    <a href="{{ url('/project/orderHome') }}?category={{ $product->category }}&seat={{ session('seat') }}">
       <button>注文<br>追加</button>
     </a>
 
@@ -128,33 +138,19 @@
 <script>
 let count = 1;
 
-const countText =
-  document.getElementById("count");
-
-const plusBtn =
-  document.getElementById("plusBtn");
-
-const minusBtn =
-  document.getElementById("minusBtn");
-
-const optionButtons =
-  document.querySelectorAll(".option-btn");
+const countText = document.getElementById("count");
+const plusBtn = document.getElementById("plusBtn");
+const minusBtn = document.getElementById("minusBtn");
+const optionButtons = document.querySelectorAll(".option-btn");
+const orderBtn = document.getElementById("orderBtn");
 
 let selectedOption = "";
 
-const orderBtn =
-  document.getElementById("orderBtn");
-
-// オプションなしの商品は最初から注文可能
 if(optionButtons.length === 0){
-
     orderBtn.disabled = false;
     plusBtn.disabled = false;
-
 }
 
-
-// オプション選択
 optionButtons.forEach(button => {
 
     button.addEventListener("click", () => {
@@ -165,8 +161,7 @@ optionButtons.forEach(button => {
 
         button.classList.add("selected");
 
-        selectedOption =
-            button.textContent.trim();
+        selectedOption = button.textContent.trim();
 
         count = 1;
         countText.textContent = count;
@@ -179,8 +174,6 @@ optionButtons.forEach(button => {
 
 });
 
-
-// ＋
 plusBtn.addEventListener("click", () => {
 
     if(count < 4){
@@ -201,8 +194,6 @@ plusBtn.addEventListener("click", () => {
 
 });
 
-
-// －
 minusBtn.addEventListener("click", () => {
 
     if(count > 1){
@@ -223,22 +214,14 @@ minusBtn.addEventListener("click", () => {
 
 });
 
-
-// カート追加
 orderBtn.addEventListener("click", () => {
 
-    document.getElementById("optionInput").value =
-        selectedOption;
-
-
-    document.getElementById("quantityInput").value =
-        count;
-
+    document.getElementById("optionInput").value = selectedOption;
+    document.getElementById("quantityInput").value = count;
 
     document.querySelector("form").submit();
 
 });
-
 </script>
 
 <script src="{{ asset('js/call-confirm.js') }}"></script>
