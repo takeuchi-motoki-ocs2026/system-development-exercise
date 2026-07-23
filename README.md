@@ -3,7 +3,7 @@
 ## 動作環境
 
 - Windows 10 / 11
-- PHP 8.2 以上
+- PHP 8.2以上
 - Composer 2.x
 - MySQL 8.0
 - Laravel 10.x
@@ -12,7 +12,7 @@
 
 # 初回セットアップ
 
-## 1. 必要ソフトのインストール
+## 1. 必要ソフトをインストール
 
 ### PHP
 
@@ -41,8 +41,8 @@ https://qiita.com/KOJI-YAMAMOTO/items/02af20e7b5cd27932a27
 ## 2. リポジトリを取得
 
 ```bash
-git clone {https://github.com/syun17/system-development-exercise.git}
-cd {system-development-exercise}
+git clone https://github.com/syun17/system-development-exercise.git
+cd system-development-exercise
 ```
 
 ---
@@ -55,7 +55,23 @@ composer install
 
 ---
 
-## 4. 環境変数ファイルを作成
+## 4. QRコードライブラリをインストール
+
+QRコード機能を利用するため、以下のコマンドを実行してください。
+
+```bash
+composer require simplesoftwareio/simple-qrcode
+```
+
+インストール後、キャッシュを削除してください。
+
+```bash
+php artisan optimize:clear
+```
+
+---
+
+## 5. 環境変数ファイルを作成
 
 ```bash
 copy .env.example .env
@@ -63,23 +79,7 @@ copy .env.example .env
 
 ---
 
-## 5. データベースを作成
-
-MySQLにログインします。
-
-```bash
-mysql -u root -p
-```
-
-データベースを作成します。
-
-```sql
-CREATE DATABASE mobile_order;
-```
-
----
-
-## 6. .env を設定
+## 6. `.env` を設定
 
 `.env` ファイルを開き、以下を設定してください。
 
@@ -104,7 +104,29 @@ mysqld --defaults-file="C:\Users\{学籍番号}\mysql\my.ini"
 
 ---
 
-## 8. アプリケーションキーを生成
+## 8. データベースを作成
+
+MySQLにログインします。
+
+```bash
+mysql -u root -p
+```
+
+データベースを作成します。
+
+```sql
+CREATE DATABASE mobile_order;
+```
+
+終了する場合
+
+```sql
+exit
+```
+
+---
+
+## 9. アプリケーションキーを生成
 
 ```bash
 php artisan key:generate
@@ -112,7 +134,7 @@ php artisan key:generate
 
 ---
 
-## 9. マイグレーションを実行
+## 10. マイグレーションを実行
 
 ```bash
 php artisan migrate
@@ -120,7 +142,7 @@ php artisan migrate
 
 ---
 
-## 10. サーバーを起動
+## 11. サーバーを起動
 
 ```bash
 php artisan serve
@@ -144,11 +166,14 @@ mysqld --defaults-file="C:\Users\{学籍番号}\mysql\my.ini"
 
 ## 2. Laravelサーバーを起動
 
+通常
+
 ```bash
 php artisan serve
 ```
 
 プロトタイプ用
+
 ```bash
 php artisan serve --host=0.0.0.0 --port=80
 ```
@@ -224,6 +249,17 @@ extension=pdo_mysql
 
 ---
 
+## Class "QrCode" not found
+
+QRコードライブラリがインストールされているか確認してください。
+
+```bash
+composer require simplesoftwareio/simple-qrcode
+php artisan optimize:clear
+```
+
+---
+
 ## ポートが使用中の場合
 
 以下のようにポート番号を変更してください。
@@ -232,7 +268,7 @@ extension=pdo_mysql
 php artisan serve --port=8080
 ```
 
-アクセス先：
+アクセス先
 
 http://127.0.0.1:8080
 
@@ -277,47 +313,72 @@ php artisan migrate:fresh
 
 # 注意事項
 
-- `.env` ファイルはGitにアップロードしないでください
-- `vendor` フォルダは `composer install` で再生成されます
-- エラーが出た場合は、エラーメッセージをよく読んでください
+- `.env` ファイルはGitにアップロードしないでください。
+- `vendor` フォルダは `composer install` で再生成されます。
+- エラーが出た場合は、エラーメッセージをよく読んでください。
+
+---
 
 # フォルダ構成
 
 ## MVCアーキテクチャ
 
-- Model データ関連:データベース
-- View 表示関連:画面 (プロトタイプの実装はこれ)
-- Controller 仲介処理:
+- Model：データ関連（データベース）
+- View：表示関連（画面・プロトタイプの実装）
+- Controller：仲介処理
 
 ### Model
-app/Modelsディレクトリ
+
+`app/Models`
 
 ### View
-resources/viewsディレクトリ
+
+`resources/views`
 
 ### Controller
-routes/web.phpフォルダでルーティング
-App\Http\Controllersフォルダで処理追加
+
+- ルーティング：`routes/web.php`
+- 処理：`app/Http/Controllers`
+
+---
 
 # プロトタイプの作成方法
-1. 作成済みのhtmlファイルを用意
-2. resources/views/prototypeフォルダの中に貼り付け
-3. 拡張子を`.html`から`.blade.php`に変更
-4. routes/web.phpファイルに以下を追加
-```
-Route::view('/prototype/{ファイル名}', 'prototype.{ファイル名}')->name('{ファイル名}');
-```
-5. 起動後http://127.0.0.1:8000/prototype/{ファイル名}を確認
-6. ファイル内のURLを調整
 
-## CSS,Javascriptの適用方法
-CSSとJavascriptは `public` フォルダに置いて配信します。
-1. CSSファイルとJavascriptファイルを用意する
-2. CSSファイルは `public/css` フォルダに、Javascriptファイルは `public/js` フォルダに入れる
-3. `resources/views/prototype` フォルダのBladeファイルで以下のように読み込む
+1. 作成済みのHTMLファイルを用意する
+2. `resources/views/project` フォルダへ配置する
+3. 拡張子を `.html` から `.blade.php` に変更する
+4. `routes/web.php` に以下を追加する
+
+```php
+Route::view('/project/{ファイル名}', 'project.{ファイル名}')->name('{ファイル名}');
 ```
+
+5. 起動後、以下へアクセスする
+
+```
+http://127.0.0.1:8000/project/{ファイル名}
+```
+
+6. ファイル内のURLを調整する
+
+---
+
+# CSS・JavaScriptの適用方法
+
+CSSとJavaScriptは `public` フォルダに配置して配信します。
+
+1. CSSファイルとJavaScriptファイルを用意する
+2. CSSファイルは `public/css`、JavaScriptファイルは `public/js` に配置する
+3. Bladeファイルで以下のように読み込む
+
+```html
 <link rel="stylesheet" href="{{ asset('css/style.css') }}">
 <script src="{{ asset('js/app.js') }}" defer></script>
 ```
+
 4. ファイル内のURLや画像パスを必要に応じて調整する
-5. 起動後 http://127.0.0.1:8000/prototype/{ファイル名} を確認する
+5. 起動後、以下へアクセスして確認する
+
+```
+http://127.0.0.1:8000/project/{ファイル名}
+```

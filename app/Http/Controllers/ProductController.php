@@ -28,7 +28,7 @@ class ProductController extends Controller
         }
 
         return view(
-            'prototype.staff.order.orderHome',
+            'project.staff.order.orderHome',
             compact('products', 'seat', 'category')
         );
     }
@@ -69,7 +69,7 @@ class ProductController extends Controller
             }
         }
 
-        return redirect('/prototype/staff/order/home');
+        return redirect('/project/staff/order/home');
     
     }
 
@@ -79,20 +79,22 @@ class ProductController extends Controller
 
         $cart = session()->get('cart', []);
 
-        if (isset($cart[$id])) {
-            $cart[$id]['quantity'] += $request->quantity;
+        $key = $id . '_' . ($request->option ?? '');
+
+        if (isset($cart[$key])) {
+            $cart[$key]['quantity'] += $request->quantity;
         } else {
-            $cart[$id] = [
+            $cart[$key] = [
                 'name' => $product->name,
                 'price' => $product->price,
                 'quantity' => $request->quantity,
-                'taste' => $request->taste ?? '',
+                'taste' => $request->option ?? '',
             ];
         }
 
         session()->put('cart', $cart);
 
-        return redirect('/prototype/staff/order/home')
+        return redirect('/project/staff/order/home')
             ->with('success', 'カートに追加しました');
 
     }
@@ -104,17 +106,17 @@ class ProductController extends Controller
         
         if ($product->stock_status === '無') {
 
-            return redirect('/prototype/staff/order/home');
+            return redirect('/project/staff/order/home');
 
         }
 
-        return view('prototype.staff.order.detail', compact('product'));
+        return view('project.staff.order.detail', compact('product'));
     }
 
     public function cart()
     {
         $cart = session()->get('cart', []);
-        return view('prototype.staff.order.cart', compact('cart'));
+        return view('project.staff.order.cart', compact('cart'));
     }
 
     public function delete($id)
@@ -127,7 +129,7 @@ class ProductController extends Controller
 
         session()->put('cart', $cart);
 
-        return redirect('/prototype/staff/order/cart');
+        return redirect('/project/staff/order/cart');
     }
 
     public function update(Request $request, $id)
@@ -140,7 +142,7 @@ class ProductController extends Controller
 
         session()->put('cart', $cart);
 
-        return redirect('/prototype/staff/order/cart');
+        return redirect('/project/staff/order/cart');
     }
 
     public function confirm()
@@ -160,7 +162,7 @@ class ProductController extends Controller
         // カート空にする
         session()->forget('cart');
 
-        return redirect('/prototype/staff/order/complete');
+        return redirect('/project/staff/order/complete');
     }
 
     public function history(Request $request)
@@ -169,7 +171,7 @@ class ProductController extends Controller
 
         $orders = Order::where('seat', $seat)->get();
 
-        return view('prototype.staff.staff_history', compact('orders', 'seat'));
+        return view('project.staff.staff_history', compact('orders', 'seat'));
     }
     
     // --- メニュー編集一覧 ---
@@ -179,7 +181,7 @@ class ProductController extends Controller
         $product = Product::findOrFail($id);
 
         return view(
-            'prototype.staff.menu-edit',
+            'project.staff.menu-edit',
             compact('product')
         );
     }
@@ -207,7 +209,7 @@ class ProductController extends Controller
         ]);
 
         return redirect(
-            '/prototype/menu-edit-list'
+            '/project/menu-edit-list'
         );
     }
     
@@ -219,7 +221,7 @@ class ProductController extends Controller
         $product->delete();
 
         return redirect(
-            '/prototype/menu-edit-list'
+            '/project/menu-edit-list'
         );
     }
     
@@ -228,7 +230,7 @@ class ProductController extends Controller
         $products = Product::all();
 
         return view(
-            'prototype.staff.menu-edit-list',
+            'project.staff.menu-edit-list',
             compact('products')
         );
     }
@@ -239,7 +241,7 @@ class ProductController extends Controller
         $products = Product::all();
 
         return view(
-            'prototype.staff.stock-status',
+            'project.staff.stock-status',
             compact('products')
         );
     }
@@ -267,7 +269,7 @@ class ProductController extends Controller
         )->get();
 
         return view(
-            'prototype.staff.order-status',
+            'project.staff.order-status',
             compact('orders')
         );
     }
@@ -303,7 +305,7 @@ class ProductController extends Controller
         }
 
         return view(
-            'prototype.customer.orderHome',
+            'project.customer.orderHome',
             compact('products', 'seat', 'category')
         );
     }
@@ -313,10 +315,10 @@ class ProductController extends Controller
         $product = Product::with('options')->findOrFail($id);
 
         if ($product->stock_status === '無') {
-            return redirect('/prototype/orderHome');
+            return redirect('/project/orderHome');
         }
 
-        return view('prototype.customer.detail', compact('product'));
+        return view('project.customer.detail', compact('product'));
     }
 
     public function customerAdd(Request $request, $id)
@@ -346,7 +348,7 @@ class ProductController extends Controller
 
         session()->put('customer_cart', $cart);
 
-        return view('prototype.customer.add');
+        return view('project.customer.add');
 
 
     }
@@ -398,7 +400,7 @@ class ProductController extends Controller
     {
         session()->forget('customer_cart');
 
-        return redirect('/prototype/cart?cleared=1');
+        return redirect('/project/cart?cleared=1');
     }
 
     public function clearCart()
@@ -406,7 +408,7 @@ class ProductController extends Controller
         session()->forget('cart');
 
         return redirect()
-            ->route('prototype.staff.order.cart');
+            ->route('project.staff.order.cart');
     }
 
     public function customerConfirm()
@@ -429,7 +431,7 @@ class ProductController extends Controller
         session()->forget('customer_cart');
 
         // 完了画面へ
-        return redirect('/prototype/complete');
+        return redirect('/project/complete');
     }
 
     public function customerHistory()
@@ -439,7 +441,7 @@ class ProductController extends Controller
         $orders = Order::where('seat', $seat)->get();
 
         return view(
-            'prototype.customer.history',
+            'project.customer.history',
             compact('orders')
         );
     }
@@ -451,7 +453,7 @@ class ProductController extends Controller
         $orders = Order::where('seat', $seat)->get();
 
         return view(
-            'prototype.customer.checkout',
+            'project.customer.checkout',
             compact('orders')
         );
     }
@@ -465,7 +467,7 @@ class ProductController extends Controller
         )->get();
 
         return view(
-            'prototype.staff.vacancy-management',
+            'project.staff.vacancy-management',
             compact('tables')
         );
     }
@@ -514,7 +516,7 @@ class ProductController extends Controller
         $calls = Call::where('status', 'pending')->get();
 
         return view(
-            'prototype.staff.seat-management',
+            'project.staff.seat-management',
             compact('tables', 'calls')
         );
     }
@@ -535,7 +537,7 @@ class ProductController extends Controller
         ]);
 
         return redirect()
-            ->route('prototypecall')
+            ->route('projectcall')
             ->with('success', '店員を呼び出しました');
     }
 
@@ -558,7 +560,7 @@ class ProductController extends Controller
         $hasPendingCall = Call::where('status', 'pending')->exists();
 
         return view(
-            'prototype.staff.home',
+            'project.staff.home',
             compact('hasPendingCall')
         );
     }
@@ -583,6 +585,6 @@ class ProductController extends Controller
 
         Order::where('seat', $seat)->delete();
 
-        return redirect('/prototype/thanks');
+        return redirect('/project/thanks');
     }
 }

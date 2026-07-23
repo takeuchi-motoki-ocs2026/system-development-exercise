@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
     ],
   };
 
-  const detailUrl = document.body.dataset.detailUrl || '/prototype/detail';
+  const detailUrl = document.body.dataset.detailUrl || '/project/detail';
 
   function showMenu(category, event) {
     const menuList = document.getElementById('menu-list');
