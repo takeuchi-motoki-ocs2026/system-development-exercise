@@ -35,7 +35,7 @@ window.addEventListener('DOMContentLoaded', function(){
     if(href){
       window.location.href = href;
     } else {
-      window.location.href = '/prototype/call';
+      window.location.href = '/project/call';
     }
   });
 

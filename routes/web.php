@@ -6,25 +6,25 @@ use App\Http\Controllers\ProductController;
 
 Route::get('/', [ProductController::class, 'customerIndex']);
 
-Route::view('/prototype', 'prototype.customer.index')->name('prototype');
+Route::view('/project', 'project.customer.index')->name('project');
 
 
-Route::view('/prototype/home', 'prototype.customer.home')->name('prototypehome');
+Route::view('/project/home', 'project.customer.home')->name('projecthome');
 
-Route::get('/prototype/orderHome', [ProductController::class, 'customerIndex'])
-    ->name('prototypeorderHome');
+Route::get('/project/orderHome', [ProductController::class, 'customerIndex'])
+    ->name('projectorderHome');
 
-Route::get('/prototype/detail/{id}', [ProductController::class, 'customerDetail'])
-    ->name('prototypedetail');
+Route::get('/project/detail/{id}', [ProductController::class, 'customerDetail'])
+    ->name('projectdetail');
     
-Route::view('/prototype/cart', 'prototype.customer.cart')->name('prototypecart');
+Route::view('/project/cart', 'project.customer.cart')->name('projectcart');
 
-Route::view('/prototype/delete', 'prototype.customer.delete')->name('prototypedelete');
+Route::view('/project/delete', 'project.customer.delete')->name('projectdelete');
 
-Route::get('/prototype/history', [ProductController::class, 'customerHistory'])
-    ->name('prototypehistory');
+Route::get('/project/history', [ProductController::class, 'customerHistory'])
+    ->name('projecthistory');
 
-Route::view('/prototype/call', 'prototype.customer.call')->name('prototypecall');
+Route::view('/project/call', 'project.customer.call')->name('projectcall');
 
 Route::post(
     '/call/{table}/processing',
@@ -32,144 +32,144 @@ Route::post(
 )->name('call.processing');
 
 Route::post(
-    '/prototype/call',
+    '/project/call',
     [ProductController::class, 'callStaff']
-)->name('prototype.call.store');
+)->name('project.call.store');
 
 Route::get(
-    '/prototype/checkout',
+    '/project/checkout',
     [ProductController::class, 'checkout']
-)->name('prototypecheckout');
+)->name('projectcheckout');
 
-Route::get('/prototype/confirm', function () {
-    return view('prototype.customer.confirm');
-})->name('prototypeconfirm');
+Route::get('/project/confirm', function () {
+    return view('project.customer.confirm');
+})->name('projectconfirm');
 
 Route::post(
-    '/prototype/checkout/complete',
+    '/project/checkout/complete',
     [ProductController::class, 'completeCheckout']
-)->name('prototype.checkout.complete');
+)->name('project.checkout.complete');
 
-Route::post('/prototype/confirm', [ProductController::class, 'customerConfirm'])
-    ->name('prototype.customer.confirm');
+Route::post('/project/confirm', [ProductController::class, 'customerConfirm'])
+    ->name('project.customer.confirm');
 
-Route::view('/prototype/add', 'prototype.customer.add')->name('prototypeadd');
+Route::view('/project/add', 'project.customer.add')->name('projectadd');
 
-Route::view('/prototype/complete', 'prototype.customer.complete')->name('prototypecomplete');
+Route::view('/project/complete', 'project.customer.complete')->name('projectcomplete');
 
-Route::view('/prototype/thanks', 'prototype.customer.thanks')->name('prototypethanks');
+Route::view('/project/thanks', 'project.customer.thanks')->name('projectthanks');
 
-Route::view('/prototype/login', 'prototype.staff.login')->name('prototypelogin');
+Route::view('/project/login', 'project.staff.login')->name('projectlogin');
 
 Route::get(
-    '/prototype/home',
+    '/project/home',
     [ProductController::class, 'staffHome']
-)->name('prototypehome');
+)->name('projecthome');
 
-Route::view('/prototype/order-menu', 'prototype.staff.order-menu')->name('prototypeorder-menu');
+Route::view('/project/order-menu', 'project.staff.order-menu')->name('projectorder-menu');
 
-Route::view('/prototype/order-history', 'prototype.staff.order-history')->name('prototypeorder-history');
+Route::view('/project/order-history', 'project.staff.order-history')->name('projectorder-history');
 
-Route::view('/prototype/menu-management', 'prototype.staff.menu-management')->name('prototypemenu-management');
+Route::view('/project/menu-management', 'project.staff.menu-management')->name('projectmenu-management');
 
-Route::view('/prototype/menu-add', 'prototype.staff.menu-add')->name('prototypemenu-add');
+Route::view('/project/menu-add', 'project.staff.menu-add')->name('projectmenu-add');
 
-Route::view('/prototype/menu-edit', 'prototype.staff.menu-edit')->name('prototypemenu-edit');
+Route::view('/project/menu-edit', 'project.staff.menu-edit')->name('projectmenu-edit');
 
-Route::redirect('/prototype/staff/order', '/prototype/staff/order/home');
+Route::redirect('/project/staff/order', '/project/staff/order/home');
 
-Route::view('/prototype/staff/order/add', 'prototype.staff.order.add')->name('prototype.staff.order.add');
+Route::view('/project/staff/order/add', 'project.staff.order.add')->name('project.staff.order.add');
 
-Route::view('/prototype/staff/order/delete', 'prototype.staff.order.delete')->name('prototype.staff.order.delete');
+Route::view('/project/staff/order/delete', 'project.staff.order.delete')->name('project.staff.order.delete');
 
-Route::view('/prototype/staff/order/complete', 'prototype.staff.order.complete')->name('prototype.staff.order.complete');
+Route::view('/project/staff/order/complete', 'project.staff.order.complete')->name('project.staff.order.complete');
 
-Route::view('/prototype/staff/order/history', 'prototype.staff.order.history')->name('prototype.staff.order.history');
+Route::view('/project/staff/order/history', 'project.staff.order.history')->name('project.staff.order.history');
 
-Route::view('/prototype/staff/order', 'prototype.staff.order')->name('prototype.staff.order');
+Route::view('/project/staff/order', 'project.staff.order')->name('project.staff.order');
 
-Route::get('/prototype/staff/qr', function (Request $request) {
-    return view('prototype.staff.qr', [
+Route::get('/project/staff/qr', function (Request $request) {
+    return view('project.staff.qr', [
         'seat' => $request->query('seat'),
         'course' => $request->query('course'),
     ]);
-})->name('prototype.staff.qr');
+})->name('project.staff.qr');
 
 Route::get(
-    '/prototype/call/pending-check',
+    '/project/call/pending-check',
     [ProductController::class, 'pendingCallCheck']
-)->name('prototype.call.pending-check');
+)->name('project.call.pending-check');
 
 
 
 
 // 一覧表示
-Route::get('/prototype/staff/order/home', [ProductController::class, 'index'])
-    ->name('prototype.staff.order.home');
+Route::get('/project/staff/order/home', [ProductController::class, 'index'])
+    ->name('project.staff.order.home');
 
 // 追加処理
 Route::post('/menu/add', [ProductController::class, 'store']);
 
 // カート表示
-Route::get('/prototype/staff/order/cart', [ProductController::class, 'cart'])
-    ->name('prototype.staff.order.cart');
+Route::get('/project/staff/order/cart', [ProductController::class, 'cart'])
+    ->name('project.staff.order.cart');
 
 // 注文カゴ追加
 Route::post('/cart/add/{id}', [ProductController::class, 'add']);
-Route::post('/prototype/cart/add/{id}', [ProductController::class, 'customerAdd']);
+Route::post('/project/cart/add/{id}', [ProductController::class, 'customerAdd']);
 
 // 客カート数量変更
-Route::post('/prototype/cart/update/{key}', [ProductController::class, 'customerUpdate']);
+Route::post('/project/cart/update/{key}', [ProductController::class, 'customerUpdate']);
 
 // 客カート商品削除
-Route::post('/prototype/cart/delete/{key}', [ProductController::class, 'customerDelete']);
+Route::post('/project/cart/delete/{key}', [ProductController::class, 'customerDelete']);
 
 // 客カート全削除
-Route::post('/prototype/cart/clear', [ProductController::class, 'customerClear']);
+Route::post('/project/cart/clear', [ProductController::class, 'customerClear']);
 
 Route::post(
-    '/prototype/staff/order/cart/clear',
+    '/project/staff/order/cart/clear',
     [ProductController::class, 'clearCart']
-)->name('prototype.staff.order.cart.clear');
+)->name('project.staff.order.cart.clear');
 
-Route::get('/prototype/staff/order/detail/{id}', [ProductController::class, 'detail']);
+Route::get('/project/staff/order/detail/{id}', [ProductController::class, 'detail']);
 
 Route::post('/cart/delete/{id}', [ProductController::class, 'delete']);
 
 Route::post('/cart/update/{id}', [ProductController::class, 'update']);
 
-Route::post('/prototype/staff/order/confirm', [ProductController::class, 'confirm'])
-    ->name('prototype.staff.order.confirm');
+Route::post('/project/staff/order/confirm', [ProductController::class, 'confirm'])
+    ->name('project.staff.order.confirm');
 
 // --- メニュー編集一覧 ---
 // 編集画面
-Route::get('/prototype/staff/staff-history', [ProductController::class, 'history'])
-    ->name('prototype.staff.staff.history');
+Route::get('/project/staff/staff-history', [ProductController::class, 'history'])
+    ->name('project.staff.staff.history');
 
 // 更新処理
 Route::get('/menu/edit/{id}', [ProductController::class, 'edit']);
 
 Route::post('/menu/edit/{id}',[ProductController::class, 'updateProduct'])
-    ->name('prototypemenu-update');
+    ->name('projectmenu-update');
 
 // 削除処理
 Route::delete('/menu/delete/{id}', [ProductController::class, 'destroy']);
 
-Route::get('/prototype/menu-edit-list', [ProductController::class, 'editList'])
-    ->name('prototypemenu-edit-list');
+Route::get('/project/menu-edit-list', [ProductController::class, 'editList'])
+    ->name('projectmenu-edit-list');
 
 Route::post('/menu/update/{id}', [ProductController::class, 'updateProduct']);
 
 // 在庫管理
-Route::get('/prototype/stock-status',[ProductController::class, 'stockStatus'])
-    ->name('prototypestock-status');
+Route::get('/project/stock-status',[ProductController::class, 'stockStatus'])
+    ->name('projectstock-status');
 
 // 在庫更新
-Route::post('/prototype/stock-status/update/{id}',[ProductController::class, 'updateStock']);
+Route::post('/project/stock-status/update/{id}',[ProductController::class, 'updateStock']);
 
 // 注文データ取得
-Route::get('/prototype/order-status',[ProductController::class, 'orderStatus'])
-    ->name('prototypeorder-status');
+Route::get('/project/order-status',[ProductController::class, 'orderStatus'])
+    ->name('projectorder-status');
 
 Route::post('/order-status/update/{id}',[ProductController::class, 'updateServed']);
 
@@ -177,8 +177,8 @@ Route::post('/order-status/update/{id}',[ProductController::class, 'updateServed
 Route::post('/order-status/update/{id}',[ProductController::class, 'updateServed']);
 
 // 空席管理
-Route::get('/prototype/staff/vacancy',[ProductController::class, 'vacancyManagement'])
-    ->name('prototype.staff.vacancy');
+Route::get('/project/staff/vacancy',[ProductController::class, 'vacancyManagement'])
+    ->name('project.staff.vacancy');
 
 // 席状態（空→使）
 Route::post('/seat/use/{id}',[ProductController::class, 'useSeat']);
@@ -189,5 +189,5 @@ Route::post('/seat/occupy/{id}',[ProductController::class, 'occupySeat']);
 Route::post('/seat/empty/{id}',[ProductController::class, 'emptySeat']);
 
 // 座席管理
-Route::get('/prototype/seat-management',[ProductController::class, 'seatManagement'])
-    ->name('prototypeseat-management');
+Route::get('/project/seat-management',[ProductController::class, 'seatManagement'])
+    ->name('projectseat-management');
