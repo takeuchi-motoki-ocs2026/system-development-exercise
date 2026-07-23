@@ -37,6 +37,7 @@
         <button type="submit" class="delete-item-btn">🗑</button>
       </form>
 
+
       <div class="history-item">
 
         <div class="history-info">
@@ -47,6 +48,8 @@
             @if(!empty($item['taste']))
                 （{{ $item['taste'] }}）
             @endif
+
+            {{ $item['name'] }}（{{ $item['taste'] }}）
           </p>
 
           <p class="item-price">
@@ -76,6 +79,12 @@
         </div>
 
       </div>
+
+
+      <form action="/cart/delete/{{ $id }}" method="POST">
+        @csrf
+        <button type="submit" class="delete-item-btn">🗑</button>
+      </form>
 
     </div>
 
