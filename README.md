@@ -100,17 +100,44 @@ php artisan key:generate
 php artisan migrate
 ```
 
-## 11. サーバーを起動
+## 11. 初期データを登録
+
+初回のみ、店舗データと座席データを登録してください。
+
+### 店舗データ
+```sql
+INSERT INTO store
+(store_id, store_number, created_at, updated_at)
+VALUES
+('店舗ID', '店舗名', NOW(), NOW());
+```
+
+### 座席データ
+
+```sql
+INSERT INTO `table`
+(store_id, table_number, seat_status, max_people, created_at, updated_at)
+VALUES
+('店舗ID', 座席番号, 'available', 最大人数, NOW(), NOW()),
+```
+
+## 12. サーバーを起動
 
 ```bash
 php artisan serve
 ```
 
-アクセス
+## 13. スタッフ画面へアクセス
 
-```
-http://127.0.0.1:8000
-```
+サーバー起動後、ブラウザで以下へアクセスしてください。
+
+スタッフログイン画面
+
+http://127.0.0.1:8000/project/login
+(ID、パスワード指定なし)
+
+## 14. 入店案内
+入店案内画面からQRコードを発行し、それを読み込むことで顧客側の注文画面に移動する
 
 ---
 
@@ -130,13 +157,11 @@ mysqld --defaults-file="C:\Users\{学籍番号}\mysql\my.ini"
 php artisan serve
 ```
 
-プロトタイプ用
+## 3. スタッフ画面へアクセス
 
-```bash
-php artisan serve --host=0.0.0.0 --port=80
-```
+ブラウザで以下へアクセスしてください。
 
----
+http://127.0.0.1:8000/project/login
 
 # よくあるエラー
 
